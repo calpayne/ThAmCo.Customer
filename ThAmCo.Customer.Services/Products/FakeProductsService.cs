@@ -35,11 +35,11 @@ namespace ThAmCo.Customer.Services.Products
             return Task.FromResult(_products);
         }
 
-        public Task<IEnumerable<ProductDto>> GetAllAsync(List<int> brands, List<int> categories, string term, double? minPrice, double? maxPrice)
+        public Task<IEnumerable<ProductDto>> GetAllAsync(int? brand, int? category, string term, double? minPrice, double? maxPrice)
         {
             return Task.FromResult(_products.Where(p => term == null || (p.Name.Contains(term) || p.Description.Contains(term)))
-                                            .Where(p => brands == null || brands.Contains(p.BrandId))
-                                            .Where(p => categories == null || categories.Contains(p.CategoryId))
+                                            .Where(p => brand == null || brand == p.BrandId)
+                                            .Where(p => category == null || category == p.CategoryId)
                                             .Where(p => minPrice == null || p.Price >= minPrice)
                                             .Where(p => maxPrice == null || p.Price <= maxPrice));
         }

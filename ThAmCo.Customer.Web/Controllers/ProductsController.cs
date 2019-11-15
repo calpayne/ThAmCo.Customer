@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,19 @@ namespace ThAmCo.Customer.Web.Controllers
         public async Task<ActionResult> Index()
         {
             var products = await _products.GetAllAsync();
+
+            if (products == null)
+            {
+                products = Array.Empty<ProductDto>();
+            }
+
+            return View(products.ToList());
+        }
+
+        // GET: Products/Search
+        public async Task<ActionResult> Search(int? brand, int? category, string term, double? minPrice, double? maxPrice)
+        {
+            var products = await _products.GetAllAsync(brand, category, term, minPrice, maxPrice);
 
             if (products == null)
             {
