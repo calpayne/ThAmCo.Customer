@@ -39,16 +39,16 @@
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                     <div class="card-body">
-                        <form>
+                        <form method="get">
                             <div class="form-group">
-                                <label for="exampleSelect1">Min Price</label>
-                                <input type="text" class="form-control" placeholder="Min Price">
+                                <label>Min Price</label>
+                                <input type="text" class="form-control" name="minPrice" min="0" placeholder="Min Price">
                             </div>
                             <div class="form-group">
-                                <label for="exampleSelect1">Max Price</label>
-                                <input type="text" class="form-control" placeholder="Max Price">
+                                <label>Max Price</label>
+                                <input type="text" class="form-control" name="maxPrice" min="0" placeholder="Max Price">
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Search</button>
+                            <button type="submit" class="btn btn-primary btn-block">Show</button>
                         </form>
                     </div>
                 </div>
