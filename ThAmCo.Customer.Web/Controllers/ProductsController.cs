@@ -31,9 +31,9 @@ namespace ThAmCo.Customer.Web.Controllers
         }
 
         // GET: Products/Search
-        public async Task<ActionResult> Search(int? brand, int? category, string term, double? minPrice, double? maxPrice)
+        public async Task<ActionResult> Search(int[] brands, int[] categories, string term, double? minPrice, double? maxPrice)
         {
-            var products = await _products.GetAllAsync(brand, category, term, minPrice, maxPrice);
+            var products = await _products.GetAllAsync(brands, categories, term, minPrice, maxPrice);
 
             if (products == null)
             {

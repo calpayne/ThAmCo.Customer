@@ -9,7 +9,7 @@ namespace ThAmCo.Customer.Services.Products
     public interface IProductsService
     {
         Task<IEnumerable<ProductDto>> GetAllAsync();
-        Task<IEnumerable<ProductDto>> GetAllAsync(int? brand, int? category, string term, double? minPrice, double? maxPrice);
+        Task<IEnumerable<ProductDto>> GetAllAsync(int[] brands, int[] categories, string term, double? minPrice, double? maxPrice);
         Task<ProductDto> GetByIDAsync(int id);
     }
 }
