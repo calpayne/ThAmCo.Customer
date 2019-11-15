@@ -8,45 +8,80 @@
 
 <div class="row">
     <div class="col-md-3">
-        <div class="jumbotron pt-4 pb-4">
-            <form>
-                <div class="form-group">
-                    <label for="exampleSelect1">Search</label>
-                    <input type="text" class="form-control" placeholder="Search...">
+        <div class="accordion" id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Search
+                        </button>
+                    </h2>
                 </div>
-                <div class="form-group">
-                    <label for="exampleSelect1">Min Price</label>
-                    <input type="text" class="form-control" placeholder="Min Price">
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="exampleSelect1">Search</label>
+                                <input type="text" class="form-control" placeholder="Search...">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Search</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="exampleSelect1">Max Price</label>
-                    <input type="text" class="form-control" placeholder="Max Price">
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Price
+                        </button>
+                    </h2>
                 </div>
-                <div class="form-group">
-                    <label for="exampleSelect1">Brand</label>
-                    <select class="form-control" id="exampleSelect1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="exampleSelect1">Min Price</label>
+                                <input type="text" class="form-control" placeholder="Min Price">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleSelect1">Max Price</label>
+                                <input type="text" class="form-control" placeholder="Max Price">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Search</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="exampleSelect1">Category</label>
-                    <select class="form-control" id="exampleSelect1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Brands
+                        </button>
+                    </h2>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Show</button>
-            </form>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+                        list brands
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            Categories
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                    <div class="card-body">
+                        list categories
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- echo brands with a checkbox, click to update etc -->
     </div>
     <div class="col-md-9">
         <partial name="_ProductsList" model="Model" />
