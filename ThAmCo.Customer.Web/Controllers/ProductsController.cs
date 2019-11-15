@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ThAmCo.Customer.Models;
 using ThAmCo.Customer.Services.Products;
 
 namespace ThAmCo.Customer.Web.Controllers
@@ -19,6 +20,12 @@ namespace ThAmCo.Customer.Web.Controllers
         public async Task<ActionResult> Index()
         {
             var products = await _products.GetAllAsync();
+
+            if (products == null)
+            {
+                products = Array.Empty<ProductDto>();
+            }
+
             return View(products.ToList());
         }
 
