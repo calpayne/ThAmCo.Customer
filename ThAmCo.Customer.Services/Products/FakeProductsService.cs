@@ -37,7 +37,7 @@ namespace ThAmCo.Customer.Services.Products
 
         public Task<IEnumerable<ProductDto>> GetAllAsync(int[] brands, int[] categories, string term, double? minPrice, double? maxPrice)
         {
-            return Task.FromResult(_products.Where(p => term == null || (p.Name.Contains(term) || p.Description.Contains(term)))
+            return Task.FromResult(_products.Where(p => term == null || (p.Name.ToLower().Contains(term.ToLower()) || p.Description.ToLower().Contains(term.ToLower())))
                                             .Where(p => brands.Count() == 0 || brands.Contains(p.BrandId))
                                             .Where(p => categories.Count() == 0 || categories.Contains(p.CategoryId))
                                             .Where(p => minPrice == null || p.Price >= minPrice)

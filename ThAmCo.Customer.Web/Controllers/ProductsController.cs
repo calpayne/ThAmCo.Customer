@@ -25,9 +25,9 @@ namespace ThAmCo.Customer.Web.Controllers
         }
 
         // GET: Products
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int[] brands, int[] categories, string term, double? minPrice, double? maxPrice)
         {
-            var products = await _products.GetAllAsync();
+            var products = await _products.GetAllAsync(brands, categories, term, minPrice, maxPrice);
 
             if (products == null)
             {
@@ -38,21 +38,8 @@ namespace ThAmCo.Customer.Web.Controllers
             {
                 Brands = await _brands.GetAllAsync(),
                 Categories = await _categories.GetAllAsync(),
-                Products = await _products.GetAllAsync()
+                Products = products
             });
-        }
-
-        // GET: Products/Search
-        public async Task<ActionResult> Search(int[] brands, int[] categories, string term, double? minPrice, double? maxPrice)
-        {
-            var products = await _products.GetAllAsync(brands, categories, term, minPrice, maxPrice);
-
-            if (products == null)
-            {
-                products = Array.Empty<ProductDto>();
-            }
-
-            return View(products.ToList());
         }
 
         // GET: Products/Details/5
