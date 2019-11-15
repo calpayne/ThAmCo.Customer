@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ThAmCo.Customer.Services.Brands;
+using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Products;
 
 namespace ThAmCo.Customer.Web
@@ -35,6 +37,8 @@ namespace ThAmCo.Customer.Web
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddTransient<IProductsService, FakeProductsService>();
+            services.AddTransient<IBrandsService, FakeBrandsService>();
+            services.AddTransient<ICategoriesService, FakeCategoriesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

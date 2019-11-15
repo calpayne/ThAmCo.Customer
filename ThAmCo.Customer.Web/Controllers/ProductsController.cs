@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ThAmCo.Customer.Models;
+using ThAmCo.Customer.Services.Brands;
+using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Products;
 
 namespace ThAmCo.Customer.Web.Controllers
@@ -11,10 +13,14 @@ namespace ThAmCo.Customer.Web.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductsService _products;
+        private readonly IBrandsService _brands;
+        private readonly ICategoriesService _categories;
 
-        public ProductsController(IProductsService products)
+        public ProductsController(IProductsService products, IBrandsService brands, ICategoriesService categories)
         {
             _products = products;
+            _brands = brands;
+            _categories = categories;
         }
 
         // GET: Products
