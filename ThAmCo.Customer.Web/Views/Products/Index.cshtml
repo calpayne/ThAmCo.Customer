@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ThAmCo.Customer.Models.ProductDto>
+﻿@model ThAmCo.Customer.Web.Models.ProductsIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -49,6 +49,6 @@
         <!-- echo brands with a checkbox, click to update etc -->
     </div>
     <div class="col-md-9">
-        <partial name="_ProductsList" model="Model" />
+        <partial name="_ProductsList" model="Model.Products" />
     </div>
 </div>

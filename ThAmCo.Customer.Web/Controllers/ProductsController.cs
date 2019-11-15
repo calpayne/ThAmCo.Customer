@@ -7,6 +7,7 @@ using ThAmCo.Customer.Models;
 using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Products;
+using ThAmCo.Customer.Web.Models;
 
 namespace ThAmCo.Customer.Web.Controllers
 {
@@ -33,7 +34,12 @@ namespace ThAmCo.Customer.Web.Controllers
                 products = Array.Empty<ProductDto>();
             }
 
-            return View(products.ToList());
+            return View(new ProductsIndexViewModel
+            {
+                Brands = await _brands.GetAllAsync(),
+                Categories = await _categories.GetAllAsync(),
+                Products = await _products.GetAllAsync()
+            });
         }
 
         // GET: Products/Search
