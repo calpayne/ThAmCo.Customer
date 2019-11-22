@@ -52,7 +52,7 @@ namespace ThAmCo.Customer.Services.Products
             {
                 foreach (int item in array)
                 {
-                    query += "&" + paramter + "= " + item;
+                    query += "&" + paramter + "=" + item;
                 }
             }
 
