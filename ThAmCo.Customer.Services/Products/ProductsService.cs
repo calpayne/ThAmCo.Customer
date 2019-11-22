@@ -62,15 +62,15 @@ namespace ThAmCo.Customer.Services.Products
         public async Task<IEnumerable<ProductDto>> GetAllAsync(int[] brands, int[] categories, string term, double? minPrice, double? maxPrice)
         {
             IEnumerable<ProductDto> products;
-            string searchQuery = "/" + AddArrayToQuery(brands, "brands") + AddArrayToQuery(categories, "categories") + 
+            string apiString = "/api/products/" + AddArrayToQuery(brands, "brands") + AddArrayToQuery(categories, "categories") + 
                                 (term != null ? "&term=" + term : "") +
                                 (minPrice != null ? "&minPrice=" + minPrice : "") +
                                 (maxPrice != null ? "&maxPrice=" + maxPrice : "")
-                                .Replace("/&", "/?");
+                                .Replace("/api/products/&", "/api/products/?");
 
             try
             {
-                HttpResponseMessage response = await _client.GetAsync("/api/products" + searchQuery);
+                HttpResponseMessage response = await _client.GetAsync(apiString);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return null;
