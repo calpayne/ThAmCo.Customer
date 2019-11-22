@@ -46,7 +46,7 @@ namespace ThAmCo.Customer.Services.Products
 
         private string AddArrayToQuery(int[] array, string paramter)
         {
-            String query = "";
+            string query = "";
 
             if (array != null && array.Length != 0)
             {
