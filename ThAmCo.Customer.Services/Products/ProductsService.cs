@@ -9,7 +9,7 @@ using ThAmCo.Customer.Models;
 
 namespace ThAmCo.Customer.Services.Products
 {
-    class ProductsService : IProductsService
+    public class ProductsService : IProductsService
     {
         private readonly HttpClient _client;
 
@@ -62,11 +62,12 @@ namespace ThAmCo.Customer.Services.Products
         public async Task<IEnumerable<ProductDto>> GetAllAsync(int[] brands, int[] categories, string term, double? minPrice, double? maxPrice)
         {
             IEnumerable<ProductDto> products;
-            string apiString = "/api/products/" + AddArrayToQuery(brands, "brands") + AddArrayToQuery(categories, "categories") + 
+            string apiString = "/api/products/search/" + AddArrayToQuery(brands, "brands") + AddArrayToQuery(categories, "categories") +
                                 (term != null ? "&term=" + term : "") +
                                 (minPrice != null ? "&minPrice=" + minPrice : "") +
-                                (maxPrice != null ? "&maxPrice=" + maxPrice : "")
-                                .Replace("/api/products/&", "/api/products/?");
+                                (maxPrice != null ? "&maxPrice=" + maxPrice : "");
+
+            apiString = apiString.Replace("/api/products/search/&", "/api/products/search/?");
 
             try
             {
