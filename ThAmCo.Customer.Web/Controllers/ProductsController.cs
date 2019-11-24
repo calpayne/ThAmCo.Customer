@@ -7,6 +7,7 @@ using ThAmCo.Customer.Models;
 using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Products;
+using ThAmCo.Customer.Services.Reviews;
 using ThAmCo.Customer.Web.Models;
 
 namespace ThAmCo.Customer.Web.Controllers
@@ -16,12 +17,14 @@ namespace ThAmCo.Customer.Web.Controllers
         private readonly IProductsService _products;
         private readonly IBrandsService _brands;
         private readonly ICategoriesService _categories;
+        private readonly IReviewsService _reviews;
 
-        public ProductsController(IProductsService products, IBrandsService brands, ICategoriesService categories)
+        public ProductsController(IProductsService products, IBrandsService brands, ICategoriesService categories, IReviewsService reviews)
         {
             _products = products;
             _brands = brands;
             _categories = categories;
+            _reviews = reviews;
         }
 
         // GET: Products
@@ -52,7 +55,11 @@ namespace ThAmCo.Customer.Web.Controllers
                 return NotFound();
             }
 
-            return View(product);
+            return View(new ProductsDetailsViewModel
+            {
+                Product = product,
+                Reviews = await _reviews.GetAllAsync(product.Id)
+            });
         }
     }
 }

@@ -1,66 +1,91 @@
-﻿@model ThAmCo.Customer.Models.ProductDto
+﻿@model ThAmCo.Customer.Web.Models.ProductsDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>ProductDto</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BrandId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BrandId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CategoryId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CategoryId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Currency)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Currency)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StockLevel)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StockLevel)
-        </dd>
-    </dl>
+<div class="jumbotron">
+    <div class="container">
+        <h1>@Html.DisplayFor(model => model.Product.Name)</h1>
+    </div>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="//via.placeholder.com/400" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Product.Id)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Product.Id)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Product.BrandId)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Product.BrandId)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Product.CategoryId)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Product.CategoryId)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Product.Name)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Product.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Product.Description)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Product.Description)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Product.Currency)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Product.Currency)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Product.Price)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Product.Price)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Product.StockLevel)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Product.StockLevel)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="mt-5">Reviews</h3>
+        </div>
+        @foreach (var item in Model.Reviews)
+        {
+            <div class="col-md-4">
+                <div class="review">
+                    <p>@item.Title</p>
+                </div>
+            </div>
+        }
+
+        @if (Model.Reviews.Count() == 0)
+        {
+            <div class="col-md-12">
+                <p>No reviews could be found.</p>
+            </div>
+        }
+    </div>
 </div>
