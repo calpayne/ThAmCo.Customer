@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Products;
+using ThAmCo.Customer.Services.Reviews;
 
 namespace ThAmCo.Customer.Web
 {
@@ -39,6 +40,7 @@ namespace ThAmCo.Customer.Web
             services.AddTransient<IProductsService, FakeProductsService>();
             services.AddTransient<IBrandsService, FakeBrandsService>();
             services.AddTransient<ICategoriesService, FakeCategoriesService>();
+            services.AddTransient<IReviewsService, FakeReviewsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
