@@ -76,3 +76,18 @@ body {
     color: #212529;
     text-decoration: none !important;
 }
+.review {
+    margin-top: 15px;
+}
+.review .fa-star {
+    color: #f5d557;
+}
+.review p {
+    margin: 0;
+}
+.review .title {
+    font-weight: 600;
+}
+.review .description {
+    font-size: 0.85rem;
+}

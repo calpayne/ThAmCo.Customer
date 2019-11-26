@@ -72,20 +72,6 @@
         <div class="col-md-12">
             <h3 class="mt-5">Reviews</h3>
         </div>
-        @foreach (var item in Model.Reviews)
-        {
-            <div class="col-md-4">
-                <div class="review">
-                    <p>@item.Title</p>
-                </div>
-            </div>
-        }
-
-        @if (Model.Reviews.Count() == 0)
-        {
-            <div class="col-md-12">
-                <p>No reviews could be found.</p>
-            </div>
-        }
+        <partial name="_ReviewsList" model="Model.Reviews" />
     </div>
 </div>
