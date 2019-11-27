@@ -61,5 +61,35 @@ namespace ThAmCo.Customer.Web.Controllers
                 Reviews = await _reviews.GetAllAsync(product.Id)
             });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Purchase([Bind("Id")] PurchaseViewModel purchase)
+        {
+            var product = await _products.GetByIDAsync(purchase.Id);
+
+            if (product == null)
+            {
+                return BadRequest();
+            }
+
+            var success = await _products.Purchase(new OrderDto
+            {
+                Product = product,
+                Customer = new CustomerDto
+                {
+                    Id = 1,
+                    Email = "test@test.com",
+                    Name = "Test Esting"
+                }
+            });
+
+            if(success)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(purchase);
+        }
     }
 }

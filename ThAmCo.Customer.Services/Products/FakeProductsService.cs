@@ -47,5 +47,10 @@ namespace ThAmCo.Customer.Services.Products
         {
             return Task.FromResult(_products.FirstOrDefault(p => p.Id == id));
         }
+
+        public Task<bool> Purchase(OrderDto order)
+        {
+            return Task.FromResult(true);
+        }
     }
 }

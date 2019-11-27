@@ -66,6 +66,12 @@
                     @Html.DisplayFor(model => model.Product.StockLevel)
                 </dd>
             </dl>
+            <form asp-action="Purchase">
+                <input asp-for="Product.Id" type="hidden" class="form-control" />
+                <div class="form-group">
+                    <input type="submit" value="Purchase" class="btn btn-primary" />
+                </div>
+            </form>
         </div>
     </div>
     <div class="row">
