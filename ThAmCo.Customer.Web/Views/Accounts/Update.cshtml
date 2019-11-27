@@ -1,0 +1,63 @@
+﻿@model ThAmCo.Customer.Web.Models.UpdateViewModel
+
+@{
+    ViewData["Title"] = "Update";
+}
+<div class="jumbotron">
+    <div class="container">
+        <h1>Update your Account</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Update">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Surname" class="control-label"></label>
+                    <input asp-for="Surname" class="form-control" />
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TelNo" class="control-label"></label>
+                    <input asp-for="TelNo" class="form-control" />
+                    <span asp-validation-for="TelNo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DeliverAddress1" class="control-label"></label>
+                    <input asp-for="DeliverAddress1" class="form-control" />
+                    <span asp-validation-for="DeliverAddress1" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DeliverAddress2" class="control-label"></label>
+                    <input asp-for="DeliverAddress2" class="form-control" />
+                    <span asp-validation-for="DeliverAddress2" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DeliverAddress3" class="control-label"></label>
+                    <input asp-for="DeliverAddress3" class="form-control" />
+                    <span asp-validation-for="DeliverAddress3" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Postcode" class="control-label"></label>
+                    <input asp-for="Postcode" class="form-control" />
+                    <span asp-validation-for="Postcode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
