@@ -13,7 +13,6 @@ namespace ThAmCo.Customer.Services.Brands
 
         public FakeBrandsService()
         {
-            Random random = new Random();
             _brands = new List<BrandDto>
             {
                 new BrandDto { Id = 1, Name = "iStuff-R-Us" },

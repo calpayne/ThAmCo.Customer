@@ -13,7 +13,6 @@ namespace ThAmCo.Customer.Services.Categories
 
         public FakeCategoriesService()
         {
-            Random random = new Random();
             _categories = new List<CategoryDto>
             {
                 new CategoryDto { Id = 1, Name = "Screen Protectors", Description = "Imitation Davison Stores screen protectors for your phone or tablet." },
