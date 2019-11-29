@@ -21,6 +21,32 @@ namespace ThAmCo.Customer.Services.Reviews
             _client = client;
         }
 
+        public async Task<bool> CreateReview(ReviewDto review)
+        {
+            try
+            {
+                HttpResponseMessage response = await _client.PostAsJsonAsync("/api/reviews/", review);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+                response.EnsureSuccessStatusCode();
+
+                ReviewDto data = await response.Content.ReadAsAsync<ReviewDto>();
+
+                if (data == null || data.Id != review.Id)
+                {
+                    return false;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task<IEnumerable<ReviewDto>> GetAllAsync(int id)
         {
             IEnumerable <ReviewDto> review;

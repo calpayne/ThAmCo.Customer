@@ -9,5 +9,6 @@ namespace ThAmCo.Customer.Services.Reviews
     public interface IReviewsService
     {
         Task<IEnumerable<ReviewDto>> GetAllAsync(int id);
+        Task<bool> CreateReview(ReviewDto review);
     }
 }
