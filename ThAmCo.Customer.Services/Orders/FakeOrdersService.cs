@@ -7,9 +7,9 @@ namespace ThAmCo.Customer.Services.Orders
 {
     public class FakeOrdersService : IOrdersService
     {
-        public Task<bool> CustomerHasOrdered(int productId, int customerId)
+        public Task<bool> CustomerHasOrderedAsync(int productId, int customerId)
         {
-            retrn true;
+            return true;
         }
     }
 }

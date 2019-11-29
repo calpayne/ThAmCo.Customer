@@ -7,6 +7,6 @@ namespace ThAmCo.Customer.Services.Orders
 {
     public interface IOrdersService
     {
-        Task<bool> CustomerHasOrdered(int productId, int customerId);
+        Task<bool> CustomerHasOrderedAsync(int productId, int customerId);
     }
 }
