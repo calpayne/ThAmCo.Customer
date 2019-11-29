@@ -9,7 +9,7 @@ namespace ThAmCo.Customer.Services.Orders
     {
         public Task<bool> CustomerHasOrderedAsync(int productId, int customerId)
         {
-            return true;
+            return Task.FromResult(true);
         }
     }
 }
