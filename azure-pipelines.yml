@@ -13,12 +13,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: UseDotNet@2
-  displayName: 'Use .NET Core sdk'
-  inputs:
-    packageType: sdk
-    version: 2.2.206
-    installationPath: $(Agent.ToolsDirectory)/dotnet
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'Building $(buildConfiguration)'
 - task: DotNetCoreCLI@2
@@ -42,7 +36,7 @@ steps:
 - task: AzureWebApp@1
   displayName: 'Deploying $(buildConfiguration) to test environment'
   inputs:
-    azureSubscription: 'ThAmCo.Customer'
-    appName: 'ThAmCo.Customer'
-    appType: webApp
+    azureSubscription: 'Azure for Students(d62a7fea-d138-4af2-a583-36271db165bf)'
+    appName: 'ThAmCoCustomer'
+    appType: webAppLinux
     package: $(System.ArtifactsDirectory)/**/*.zip
