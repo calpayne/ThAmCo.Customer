@@ -2,14 +2,32 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using ThAmCo.Customer.Models;
 
 namespace ThAmCo.Customer.Services.Orders
 {
     public class FakeOrdersService : IOrdersService
     {
+        private readonly IEnumerable<OrderGetDto> _orders;
+
+        public FakeOrdersService()
+        {
+            _orders = new List<OrderGetDto>
+            {
+                new OrderGetDto { Id = 1, CreationDate = new DateTime(2019, 12, 7), Price = 10.25, Status = "Dispatched", Product = new ProductDto { Id = 1, Currency = "£", BrandId = 1, CategoryId = 4, Description = "Poor quality fake faux leather cover loose enough to fit any mobile device.", Name = "Wrap It and Hope Cover", Price = 10.25, StockLevel = 1 } },
+                new OrderGetDto { Id = 2, CreationDate = new DateTime(2019, 12, 9), Price = 50.25, Status = "Pending", Product = new ProductDto { Id = 2, Currency = "£", BrandId = 2, CategoryId = 3, Description = "Purchase you favourite chocolate and use the provided heating element to melt it into the perfect cover for your mobile device.", Name = "Chocolate Cover", Price = 50.25, StockLevel = 12 } },
+                new OrderGetDto { Id = 3, CreationDate = new DateTime(2019, 12, 12), Price = 100.25, Status = "Pending", Product = new ProductDto { Id = 3, Currency = "£",BrandId = 3, CategoryId = 2, Description = "Lamely adapted used and dirty teatowel.  Guaranteed fewer than two holes.", Name = "Cloth Cover", Price = 100.25, StockLevel = 24 } }
+            };
+        }
+
         public Task<bool> CustomerHasOrderedAsync(int productId, int customerId)
         {
             return Task.FromResult(true);
+        }
+
+        public Task<IEnumerable<OrderGetDto>> GetOrdersAsync(int customerId)
+        {
+            return Task.FromResult(_orders);
         }
     }
 }
