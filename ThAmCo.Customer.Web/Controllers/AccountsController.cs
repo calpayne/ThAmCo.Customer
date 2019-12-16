@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ThAmCo.Customer.Services.Profiles;
 using ThAmCo.Customer.Web.Models;
 
 namespace ThAmCo.Customer.Web.Controllers
 {
     public class AccountsController : Controller
     {
+        private readonly IProfilesService _profiles;
+
+        public AccountsController(IProfilesService profiles)
+        {
+            _profiles = profiles;
+        }
+
         public IActionResult Login()
         {
             return View();
@@ -45,18 +53,25 @@ namespace ThAmCo.Customer.Web.Controllers
             return View(rvm);
         }
 
-        public IActionResult Update()
+        public async Task<IActionResult> Update()
         {
-            return View();
+            var profile = await _profiles.GetProfileAsync(1);
+            return View(UpdateViewModel.Transform(profile));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update([Bind("FirstName,Surname,Email,TelNo,DeliverAddress1,DeliverAddress2,DeliverAddress3,Postcode")] UpdateViewModel uvm)
+        public async Task<IActionResult> Update([Bind("Id,FirstName,Surname,Email,TelNo,DeliverAddress1,DeliverAddress2,DeliverAddress3,Postcode")] UpdateViewModel uvm)
         {
             if (ModelState.IsValid)
             {
-                //do stuff
+                bool updated = await _profiles.UpdateProfileAsync(UpdateViewModel.ToProfileDto(uvm));
+
+                if (!updated)
+                {
+                    return View(uvm);
+                }
+
                 return RedirectToAction(nameof(Update));
             }
 

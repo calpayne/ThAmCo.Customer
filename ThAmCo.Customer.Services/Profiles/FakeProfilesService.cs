@@ -26,7 +26,7 @@ namespace ThAmCo.Customer.Services.Profiles
 
         public Task<bool> UpdateProfileAsync(ProfileDto profile)
         {
-            var data = _profiles.FirstOrDefault(p => p.Id == profile.Id);
+            var data = _profiles.FirstOrDefault(p => p.Id == 1);
 
             if (data == null)
             {
@@ -34,6 +34,7 @@ namespace ThAmCo.Customer.Services.Profiles
             }
 
             data = profile;
+
             return Task.FromResult(true);
         }
     }

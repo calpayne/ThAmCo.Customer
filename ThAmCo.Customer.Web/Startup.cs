@@ -13,6 +13,7 @@ using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Orders;
 using ThAmCo.Customer.Services.Products;
+using ThAmCo.Customer.Services.Profiles;
 using ThAmCo.Customer.Services.Reviews;
 
 namespace ThAmCo.Customer.Web
@@ -43,6 +44,7 @@ namespace ThAmCo.Customer.Web
             services.AddTransient<ICategoriesService, FakeCategoriesService>();
             services.AddTransient<IReviewsService, FakeReviewsService>();
             services.AddTransient<IOrdersService, FakeOrdersService>();
+            services.AddTransient<IProfilesService, FakeProfilesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
