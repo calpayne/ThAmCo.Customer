@@ -32,6 +32,8 @@ namespace ThAmCo.Customer.Web.Controllers
             _orders = orders;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
         // GET: Products
         public async Task<ActionResult> Index(int[] brands, int[] categories, string term, double? minPrice, double? maxPrice)
         {
@@ -51,6 +53,8 @@ namespace ThAmCo.Customer.Web.Controllers
             });
         }
 
+        [HttpGet]
+        [AllowAnonymous]
         // GET: Products/Details/5
         public async Task<ActionResult> Details(int id)
         {

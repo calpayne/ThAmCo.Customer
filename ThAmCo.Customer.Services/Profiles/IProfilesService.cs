@@ -9,6 +9,6 @@ namespace ThAmCo.Customer.Services.Profiles
     public interface IProfilesService
     {
         Task<bool> UpdateProfileAsync(ProfileDto profile);
-        Task<ProfileDto> GetProfileAsync(int id);
+        Task<ProfileDto> GetProfileAsync(string id);
     }
 }
