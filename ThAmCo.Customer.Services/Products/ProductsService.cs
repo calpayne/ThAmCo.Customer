@@ -111,9 +111,30 @@ namespace ThAmCo.Customer.Services.Products
             return product;
         }
 
-        public Task<bool> PurchaseAsync(OrderDto order)
+        public async Task<bool> PurchaseAsync(OrderDto order)
         {
-            throw new NotImplementedException();
+            bool has = false;
+            OrderDto result;
+
+            try
+            {
+                HttpResponseMessage response = await _client.PostAsJsonAsync("/api/products/purchase", order);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+                response.EnsureSuccessStatusCode();
+
+                result = await response.Content.ReadAsAsync<OrderDto>();
+
+                has = result.Customer.Id == order.Customer.Id && result.Product.Id == order.Product.Id;
+            }
+            catch (HttpRequestException)
+            {
+                result = null;
+            }
+
+            return has;
         }
     }
 }
