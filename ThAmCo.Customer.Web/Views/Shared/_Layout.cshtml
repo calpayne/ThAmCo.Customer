@@ -55,14 +55,11 @@
                         }
                         else
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Account
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Login">Login</a>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Register">Register</a>
-                                </div>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
                         }
                     </ul>
