@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThAmCo.Customer.Models;
 using ThAmCo.Customer.Services.Brands;
@@ -37,6 +39,15 @@ namespace ThAmCo.Customer.Web.Controllers
                 products = Array.Empty<ProductDto>();
             }
 
+            var user = HttpContext.User;
+            var claims = user.Claims.ToArray();
+
+            if (user.Identity.IsAuthenticated)
+            {
+                string suid = claims[0].Value;
+            }
+
+
             return View(new ProductsIndexViewModel
             {
                 Brands = await _brands.GetAllAsync(),
@@ -63,6 +74,7 @@ namespace ThAmCo.Customer.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Purchase([Bind("Id")] PurchaseViewModel purchase)
         {

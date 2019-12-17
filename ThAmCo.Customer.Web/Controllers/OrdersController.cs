@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThAmCo.Customer.Services.Orders;
 
@@ -16,6 +17,8 @@ namespace ThAmCo.Customer.Web.Controllers
             _orders = orders;
         }
 
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await _orders.GetOrdersAsync(1));

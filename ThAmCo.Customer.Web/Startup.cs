@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using ThAmCo.Customer.Services.Auth;
 using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Orders;
@@ -37,6 +39,8 @@ namespace ThAmCo.Customer.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddAuthentication("Cookies")
+                    .AddCookie("Cookies");
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddTransient<IProductsService, FakeProductsService>();
@@ -45,6 +49,15 @@ namespace ThAmCo.Customer.Web
             services.AddTransient<IReviewsService, FakeReviewsService>();
             services.AddTransient<IOrdersService, FakeOrdersService>();
             services.AddTransient<IProfilesService, FakeProfilesService>();
+
+            services.AddHttpClient<IAuthService, AuthService>(c =>
+                    {
+                        c.BaseAddress = new System.Uri(Configuration["AuthServer"]);
+                    })
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +77,8 @@ namespace ThAmCo.Customer.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

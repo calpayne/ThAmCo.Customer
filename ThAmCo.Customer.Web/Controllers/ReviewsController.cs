@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThAmCo.Customer.Models;
 using ThAmCo.Customer.Services.Products;
@@ -20,6 +21,8 @@ namespace ThAmCo.Customer.Web.Controllers
             _reviews = reviews;
         }
 
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Create(int id)
         {
             ProductDto product = await _products.GetByIDAsync(id);
@@ -33,6 +36,7 @@ namespace ThAmCo.Customer.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Id,Title","Description","Rating","ProductId")] ReviewDto review)
         {
