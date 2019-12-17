@@ -9,5 +9,6 @@ namespace ThAmCo.Customer.Web.Models
         public IEnumerable<BrandDto> Brands { get; set; }
         public IEnumerable<CategoryDto> Categories { get; set; }
         public IEnumerable<ProductDto> Products { get; set; }
+        public bool IsLoggedIn { get; set; }
     }
 }

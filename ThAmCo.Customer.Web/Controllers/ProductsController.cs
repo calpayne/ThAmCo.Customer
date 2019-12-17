@@ -39,19 +39,18 @@ namespace ThAmCo.Customer.Web.Controllers
                 products = Array.Empty<ProductDto>();
             }
 
-            var claims = User.Claims.ToArray();
-
             if (User.Identity.IsAuthenticated)
             {
+                var claims = User.Claims.ToArray();
                 string suid = claims[0].Value;
             }
-
 
             return View(new ProductsIndexViewModel
             {
                 Brands = await _brands.GetAllAsync(),
                 Categories = await _categories.GetAllAsync(),
-                Products = products
+                Products = products,
+                IsLoggedIn = User.Identity.IsAuthenticated
             });
         }
 
@@ -68,7 +67,8 @@ namespace ThAmCo.Customer.Web.Controllers
             return View(new ProductsDetailsViewModel
             {
                 Product = product,
-                Reviews = await _reviews.GetAllAsync(product.Id)
+                Reviews = await _reviews.GetAllAsync(product.Id),
+                IsLoggedIn = User.Identity.IsAuthenticated
             });
         }
 

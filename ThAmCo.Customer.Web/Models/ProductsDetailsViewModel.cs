@@ -10,5 +10,6 @@ namespace ThAmCo.Customer.Web.Models
     {
         public ProductDto Product { get; set; }
         public IEnumerable<ReviewDto> Reviews { get; set; }
+        public bool IsLoggedIn { get; set; }
     }
 }
