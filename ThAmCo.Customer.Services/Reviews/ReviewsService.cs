@@ -13,11 +13,8 @@ namespace ThAmCo.Customer.Services.Reviews
     {
         private readonly HttpClient _client;
 
-        public ReviewsService(IConfiguration config, HttpClient client)
+        public ReviewsService(HttpClient client)
         {
-            client.BaseAddress = new System.Uri(config.GetConnectionString("Reviews"));
-            client.Timeout = TimeSpan.FromSeconds(5);
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             _client = client;
         }
 
