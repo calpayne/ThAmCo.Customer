@@ -10,7 +10,7 @@ namespace ThAmCo.Customer.Web.Models
     public class UpdateViewModel
     {
         [Required]
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
