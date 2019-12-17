@@ -39,10 +39,9 @@ namespace ThAmCo.Customer.Web.Controllers
                 products = Array.Empty<ProductDto>();
             }
 
-            var user = HttpContext.User;
-            var claims = user.Claims.ToArray();
+            var claims = User.Claims.ToArray();
 
-            if (user.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 string suid = claims[0].Value;
             }

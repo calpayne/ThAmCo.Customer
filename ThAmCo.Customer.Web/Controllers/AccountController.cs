@@ -28,6 +28,11 @@ namespace ThAmCo.Customer.Web.Controllers
         [AllowAnonymous]
         public IActionResult Login([FromQuery] string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return LocalRedirect("/");
+            }
+
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -73,6 +78,11 @@ namespace ThAmCo.Customer.Web.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return LocalRedirect("/");
+            }
+
             return View();
         }
 
