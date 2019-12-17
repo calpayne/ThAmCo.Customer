@@ -39,12 +39,6 @@ namespace ThAmCo.Customer.Web.Controllers
                 products = Array.Empty<ProductDto>();
             }
 
-            if (User.Identity.IsAuthenticated)
-            {
-                var claims = User.Claims.ToArray();
-                string suid = claims[0].Value;
-            }
-
             return View(new ProductsIndexViewModel
             {
                 Brands = await _brands.GetAllAsync(),

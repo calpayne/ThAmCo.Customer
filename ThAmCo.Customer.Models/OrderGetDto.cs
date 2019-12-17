@@ -11,5 +11,6 @@ namespace ThAmCo.Customer.Models
         public double Price { get; set; }
         public DateTime CreationDate { get; set; }
         public string Status { get; set; }
+        public string CustomerId { get; set; }
     }
 }

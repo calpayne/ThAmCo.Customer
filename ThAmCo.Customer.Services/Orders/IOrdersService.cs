@@ -8,8 +8,8 @@ namespace ThAmCo.Customer.Services.Orders
 {
     public interface IOrdersService
     {
-        Task<bool> CustomerHasOrderedAsync(int productId, int customerId);
+        Task<bool> CustomerHasOrderedAsync(int productId, string customerId);
 
-        Task<IEnumerable<OrderGetDto>> GetOrdersAsync(int customerId);
+        Task<IEnumerable<OrderGetDto>> GetOrdersAsync(string customerId);
     }
 }
