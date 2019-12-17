@@ -110,5 +110,10 @@ namespace ThAmCo.Customer.Services.Products
 
             return product;
         }
+
+        public Task<bool> PurchaseAsync(OrderDto order)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

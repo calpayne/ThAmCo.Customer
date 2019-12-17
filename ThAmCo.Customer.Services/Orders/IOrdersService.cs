@@ -10,6 +10,5 @@ namespace ThAmCo.Customer.Services.Orders
     {
         Task<bool> CustomerHasOrderedAsync(int productId, string customerId);
         Task<IEnumerable<OrderGetDto>> GetOrdersAsync(string customerId);
-        Task<bool> Purchase(OrderDto order);
     }
 }

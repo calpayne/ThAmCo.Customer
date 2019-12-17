@@ -21,15 +21,13 @@ namespace ThAmCo.Customer.Web.Controllers
         private readonly IBrandsService _brands;
         private readonly ICategoriesService _categories;
         private readonly IReviewsService _reviews;
-        private readonly IOrdersService _orders;
 
-        public ProductsController(IProductsService products, IBrandsService brands, ICategoriesService categories, IReviewsService reviews, IOrdersService orders)
+        public ProductsController(IProductsService products, IBrandsService brands, ICategoriesService categories, IReviewsService reviews)
         {
             _products = products;
             _brands = brands;
             _categories = categories;
             _reviews = reviews;
-            _orders = orders;
         }
 
         [HttpGet]
@@ -87,7 +85,7 @@ namespace ThAmCo.Customer.Web.Controllers
 
             var claims = User.Claims.ToArray();
 
-            var success = await _orders.Purchase(new OrderDto
+            var success = await _products.PurchaseAsync(new OrderDto
             {
                 Product = product,
                 Customer = new CustomerDto

@@ -31,20 +31,5 @@ namespace ThAmCo.Customer.Services.Orders
         {
             return Task.FromResult(_orders.Where(o => o.CustomerId == customerId));
         }
-
-        public Task<bool> Purchase(OrderDto order)
-        {
-            OrderGetDto ogd = new OrderGetDto
-            {
-                Id = _orders.Count() + 1,
-                Product = order.Product,
-                Price = order.Product.Price,
-                CreationDate = DateTime.Now,
-                Status = "Pending",
-                CustomerId = order.Customer.Id
-            };
-            _orders = _orders.Concat(new List<OrderGetDto> { ogd });
-            return Task.FromResult(true);
-        }
     }
 }

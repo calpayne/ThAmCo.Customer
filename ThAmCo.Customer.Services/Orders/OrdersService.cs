@@ -62,28 +62,5 @@ namespace ThAmCo.Customer.Services.Orders
 
             return orders;
         }
-
-        public async Task<bool> Purchase(OrderDto order)
-        {
-            bool has;
-
-            try
-            {
-                HttpResponseMessage response = await _client.GetAsync("/api/purchase/?productId=" + order.Product.Id + "&customerId=" + order.Customer.Id);
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    return false;
-                }
-                response.EnsureSuccessStatusCode();
-
-                has = await response.Content.ReadAsAsync<bool>();
-            }
-            catch (HttpRequestException)
-            {
-                has = false;
-            }
-
-            return has;
-        }
     }
 }
