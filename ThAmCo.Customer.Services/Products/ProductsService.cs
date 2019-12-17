@@ -110,10 +110,5 @@ namespace ThAmCo.Customer.Services.Products
 
             return product;
         }
-
-        public Task<bool> Purchase(OrderDto order)
-        {
-            return Task.FromResult(true);
-        }
     }
 }

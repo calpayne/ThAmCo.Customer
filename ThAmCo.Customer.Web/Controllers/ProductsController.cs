@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using ThAmCo.Customer.Models;
 using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
+using ThAmCo.Customer.Services.Orders;
 using ThAmCo.Customer.Services.Products;
 using ThAmCo.Customer.Services.Reviews;
 using ThAmCo.Customer.Web.Models;
@@ -20,13 +21,15 @@ namespace ThAmCo.Customer.Web.Controllers
         private readonly IBrandsService _brands;
         private readonly ICategoriesService _categories;
         private readonly IReviewsService _reviews;
+        private readonly IOrdersService _orders;
 
-        public ProductsController(IProductsService products, IBrandsService brands, ICategoriesService categories, IReviewsService reviews)
+        public ProductsController(IProductsService products, IBrandsService brands, ICategoriesService categories, IReviewsService reviews, IOrdersService orders)
         {
             _products = products;
             _brands = brands;
             _categories = categories;
             _reviews = reviews;
+            _orders = orders;
         }
 
         // GET: Products
@@ -78,23 +81,25 @@ namespace ThAmCo.Customer.Web.Controllers
                 return BadRequest();
             }
 
-            var success = await _products.Purchase(new OrderDto
+            var claims = User.Claims.ToArray();
+
+            var success = await _orders.Purchase(new OrderDto
             {
                 Product = product,
                 Customer = new CustomerDto
                 {
-                    Id = 1,
-                    Email = "test@test.com",
-                    Name = "Test Esting"
+                    Id = claims[0].Value,
+                    Email = claims[2].Value,
+                    Name = claims[3].Value
                 }
             });
 
             if(success)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Orders");
             }
 
-            return View(purchase);
+            return RedirectToAction("Details", new { @id = purchase.Id });
         }
     }
 }
