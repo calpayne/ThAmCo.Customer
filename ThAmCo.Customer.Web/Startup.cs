@@ -43,12 +43,67 @@ namespace ThAmCo.Customer.Web
                     .AddCookie("Cookies");
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddTransient<IProductsService, FakeProductsService>();
-            services.AddTransient<IBrandsService, FakeBrandsService>();
-            services.AddTransient<ICategoriesService, FakeCategoriesService>();
-            services.AddTransient<IReviewsService, FakeReviewsService>();
-            services.AddTransient<IOrdersService, FakeOrdersService>();
-            services.AddTransient<IProfilesService, FakeProfilesService>();
+
+            if (Configuration["UseFakeData"] == "true")
+            {
+                services.AddTransient<IProductsService, FakeProductsService>();
+                services.AddTransient<IBrandsService, FakeBrandsService>();
+                services.AddTransient<ICategoriesService, FakeCategoriesService>();
+                services.AddTransient<IReviewsService, FakeReviewsService>();
+                services.AddTransient<IOrdersService, FakeOrdersService>();
+                services.AddTransient<IProfilesService, FakeProfilesService>();
+            }
+            else
+            {
+                services.AddHttpClient<IProductsService, ProductsService>(c =>
+                    {
+                        c.BaseAddress = new System.Uri(Configuration["ProductsAPI"]);
+                    })
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+                services.AddHttpClient<IBrandsService, BrandsService>(c =>
+                    {
+                        c.BaseAddress = new System.Uri(Configuration["ProductsAPI"]);
+                    })
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+                services.AddHttpClient<ICategoriesService, CategoriesService>(c =>
+                    {
+                        c.BaseAddress = new System.Uri(Configuration["ProductsAPI"]);
+                    })
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+                services.AddHttpClient<IReviewsService, ReviewsService>(c =>
+                    {
+                        c.BaseAddress = new System.Uri(Configuration["ReviewsAPI"]);
+                    })
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+                services.AddHttpClient<IOrdersService, OrdersService>(c =>
+                    {
+                        c.BaseAddress = new System.Uri(Configuration["OrdersAPI"]);
+                    })
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+                services.AddHttpClient<IProfilesService, ProfilesService>(c =>
+                    {
+                        c.BaseAddress = new System.Uri(Configuration["ProfilesAPI"]);
+                    })
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
+                    .AddTransientHttpErrorPolicy(p =>
+                        p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+            }
 
             services.AddHttpClient<IAuthService, AuthService>(c =>
                     {

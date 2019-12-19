@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -13,11 +12,8 @@ namespace ThAmCo.Customer.Services.Categories
     {
         private readonly HttpClient _client;
 
-        public CategoriesService(IConfiguration config, HttpClient client)
+        public CategoriesService(HttpClient client)
         {
-            client.BaseAddress = new System.Uri(config.GetConnectionString("Products"));
-            client.Timeout = TimeSpan.FromSeconds(5);
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             _client = client;
         }
 
