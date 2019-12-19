@@ -10,5 +10,6 @@ namespace ThAmCo.Customer.Services.Profiles
     {
         Task<bool> UpdateProfileAsync(ProfileDto profile);
         Task<ProfileDto> GetProfileAsync(string id);
+        Task<bool> CanPurchase(string customerId);
     }
 }

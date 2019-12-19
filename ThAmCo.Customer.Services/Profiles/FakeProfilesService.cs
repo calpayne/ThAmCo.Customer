@@ -19,6 +19,11 @@ namespace ThAmCo.Customer.Services.Profiles
             };
         }
 
+        public Task<bool> CanPurchase(string customerId)
+        {
+            return Task.FromResult(true);
+        }
+
         public Task<ProfileDto> GetProfileAsync(string id)
         {
             return Task.FromResult(_profiles.FirstOrDefault(p => p.Id == id));

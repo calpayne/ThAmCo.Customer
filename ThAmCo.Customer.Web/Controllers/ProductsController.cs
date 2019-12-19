@@ -10,6 +10,7 @@ using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Orders;
 using ThAmCo.Customer.Services.Products;
+using ThAmCo.Customer.Services.Profiles;
 using ThAmCo.Customer.Services.Reviews;
 using ThAmCo.Customer.Web.Models;
 
@@ -21,13 +22,15 @@ namespace ThAmCo.Customer.Web.Controllers
         private readonly IBrandsService _brands;
         private readonly ICategoriesService _categories;
         private readonly IReviewsService _reviews;
+        private readonly IProfilesService _profiles;
 
-        public ProductsController(IProductsService products, IBrandsService brands, ICategoriesService categories, IReviewsService reviews)
+        public ProductsController(IProductsService products, IBrandsService brands, ICategoriesService categories, IReviewsService reviews, IProfilesService profiles)
         {
             _products = products;
             _brands = brands;
             _categories = categories;
             _reviews = reviews;
+            _profiles = profiles;
         }
 
         [HttpGet]
@@ -88,12 +91,20 @@ namespace ThAmCo.Customer.Web.Controllers
                 return BadRequest();
             }
 
+            string usid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+
+            bool canPurchase = await _profiles.CanPurchase(usid);
+            if (!canPurchase)
+            {
+                return BadRequest();
+            }
+
             var success = await _products.PurchaseAsync(new OrderDto
             {
                 Product = product,
                 Customer = new CustomerDto
                 {
-                    Id = User.Claims.FirstOrDefault(c => c.Type == "sub").Value,
+                    Id = usid,
                     Email = User.Claims.FirstOrDefault(c => c.Type == "preferred_username").Value,
                     Name = User.Claims.FirstOrDefault(c => c.Type == "name").Value
                 }
