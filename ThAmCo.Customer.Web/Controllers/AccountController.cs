@@ -104,11 +104,10 @@ namespace ThAmCo.Customer.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Update()
         {
-            string suid = null;
-            if (User.Identity.IsAuthenticated)
+            string suid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+            if (suid == null)
             {
-                var claims = User.Claims.ToArray();
-                suid = claims[0].Value;
+                return BadRequest();
             }
 
             var profile = await _profiles.GetProfileAsync(suid);

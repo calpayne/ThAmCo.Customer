@@ -88,16 +88,14 @@ namespace ThAmCo.Customer.Web.Controllers
                 return BadRequest();
             }
 
-            var claims = User.Claims.ToArray();
-
             var success = await _products.PurchaseAsync(new OrderDto
             {
                 Product = product,
                 Customer = new CustomerDto
                 {
-                    Id = claims[0].Value,
-                    Email = claims[2].Value,
-                    Name = claims[3].Value
+                    Id = User.Claims.FirstOrDefault(c => c.Type == "sub").Value,
+                    Email = User.Claims.FirstOrDefault(c => c.Type == "preferred_username").Value,
+                    Name = User.Claims.FirstOrDefault(c => c.Type == "name").Value
                 }
             });
 

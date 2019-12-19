@@ -33,11 +33,10 @@ namespace ThAmCo.Customer.Web.Controllers
                 return false;
             }
 
-            string suid = null;
-            if (User.Identity.IsAuthenticated)
+            string suid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+            if (suid == null)
             {
-                var claims = User.Claims.ToArray();
-                suid = claims[0].Value;
+                return false;
             }
 
             bool hasOredered = await _orders.CustomerHasOrderedAsync(productId, suid);

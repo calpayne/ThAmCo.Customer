@@ -21,11 +21,10 @@ namespace ThAmCo.Customer.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            string suid = null;
-            if (User.Identity.IsAuthenticated)
+            string suid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+            if (suid == null)
             {
-                var claims = User.Claims.ToArray();
-                suid = claims[0].Value;
+                return BadRequest();
             }
 
             return View(await _orders.GetOrdersAsync(suid));
