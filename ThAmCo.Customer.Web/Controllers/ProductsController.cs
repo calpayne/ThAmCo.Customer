@@ -47,7 +47,7 @@ namespace ThAmCo.Customer.Web.Controllers
                 Brands = await _brands.GetAllAsync(),
                 Categories = await _categories.GetAllAsync(),
                 Products = products,
-                IsLoggedIn = User.Identity.IsAuthenticated
+                IsLoggedIn = (User == null) ? false : User.Identity.IsAuthenticated
             });
         }
 
@@ -67,7 +67,7 @@ namespace ThAmCo.Customer.Web.Controllers
             {
                 Product = product,
                 Reviews = await _reviews.GetAllAsync(product.Id),
-                IsLoggedIn = User.Identity.IsAuthenticated
+                IsLoggedIn = (User == null) ? false : User.Identity.IsAuthenticated
             });
         }
 
@@ -79,6 +79,11 @@ namespace ThAmCo.Customer.Web.Controllers
             var product = await _products.GetByIDAsync(purchase.Id);
 
             if (product == null)
+            {
+                return BadRequest();
+            }
+
+            if (User == null)
             {
                 return BadRequest();
             }

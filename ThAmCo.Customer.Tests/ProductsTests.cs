@@ -1,11 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
+using ThAmCo.Customer.Services.Brands;
+using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Products;
+using ThAmCo.Customer.Services.Reviews;
+using ThAmCo.Customer.Web.Controllers;
+using ThAmCo.Customer.Web.Models;
 
 namespace ThAmCo.Customer.Tests
 {
@@ -20,7 +26,7 @@ namespace ThAmCo.Customer.Tests
             {
                 new ProductDto { Id = 1, Currency = "£", BrandId = 1, CategoryId = 4, Description = "Poor quality fake faux leather cover loose enough to fit any mobile device.", Name = "Wrap It and Hope Cover", Price = 10.25, StockLevel = 1 },
                 new ProductDto { Id = 2, Currency = "£", BrandId = 2, CategoryId = 3, Description = "Purchase you favourite chocolate and use the provided heating element to melt it into the perfect cover for your mobile device.", Name = "Chocolate Cover", Price = 50.25, StockLevel = 12 },
-                new ProductDto { Id = 3, Currency = "£",BrandId = 3, CategoryId = 2, Description = "Lamely adapted used and dirty teatowel.  Guaranteed fewer than two holes.", Name = "Cloth Cover", Price = 100.25, StockLevel = 24 },
+                new ProductDto { Id = 3, Currency = "£", BrandId = 3, CategoryId = 2, Description = "Lamely adapted used and dirty teatowel.  Guaranteed fewer than two holes.", Name = "Cloth Cover", Price = 100.25, StockLevel = 24 },
                 new ProductDto { Id = 4, Currency = "£", BrandId = 4, CategoryId = 1, Description = "Especially toughen and harden sponge entirely encases your device to prevent any interaction.", Name = "Harden Sponge Case", Price = 60.25, StockLevel = 4 },
                 new ProductDto { Id = 5, Currency = "£", BrandId = 1, CategoryId = 4, Description = "Place your device within the water-tight container, fill with water and enjoy the cushioned protection from bumps and bangs.", Name = "Water Bath Case", Price = 20.25, StockLevel = 5 },
                 new ProductDto { Id = 6, Currency = "£", BrandId = 2, CategoryId = 3, Description = "Keep you smartphone handsfree with this large assembly that attaches to your rear window wiper (Hatchbacks only).", Name = "Smartphone Car Holder", Price = 200.25, StockLevel = 13 },
@@ -32,13 +38,23 @@ namespace ThAmCo.Customer.Tests
                 new ProductDto { Id = 12, Currency = "£", BrandId = 4, CategoryId = 1, Description = "Guaranteed not to conduct electical charge from your fingers.", Name = "Non-conductive Screen Protector", Price = 99.25, StockLevel = 0 }
             };
 
-            IProductsService service = new FakeProductsService();
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+            int[] brands = { 1, 2, 3, 4 };
+            int[] categories = { 1, 2, 3, 4 };
+            string search = ".";
+            double minPrice = -1;
+            double maxPrice = double.MaxValue;
 
             // Act
-            IEnumerable<ProductDto> products = await service.GetAllAsync();
+            var result = await controller.Index(brands, categories, search, minPrice, maxPrice);
 
             // Assert
-            Assert.IsNotNull(service);
+            Assert.IsNotNull(result);
+            var view = result as ViewResult;
+            Assert.IsNotNull(view);
+            var model = view.ViewData.Model as ProductsIndexViewModel;
+            Assert.IsNotNull(model);
+            var products = model.Products;
             Assert.IsNotNull(products);
             Assert.AreEqual(fakeProducts.Count(), products.Count());
             for (int i = 0; i < products.Count(); i++)
@@ -52,6 +68,115 @@ namespace ThAmCo.Customer.Tests
                 Assert.AreEqual(fakeProducts.ElementAt(i).Price, products.ElementAt(i).Price);
                 Assert.AreEqual(fakeProducts.ElementAt(i).StockLevel, products.ElementAt(i).StockLevel);
             }
+        }
+
+        [TestMethod]
+        public async Task GetAllProducts_WithValidSearch_ShouldBeValid()
+        {
+            // Arrange
+            IEnumerable<ProductDto> fakeProducts = new List<ProductDto>
+            {
+                new ProductDto { Id = 5, BrandId = 1, CategoryId = 4, Description = "Place your device within the water-tight container, fill with water and enjoy the cushioned protection from bumps and bangs.", Name = "Water Bath Case", Price = 20.25, StockLevel = 5 },
+                new ProductDto { Id = 9, BrandId = 1, CategoryId = 4, Description = "Coat your mobile device screen in a scratch resistant, opaque film.", Name = "Spray Paint Screen Protector", Price = 45.25, StockLevel = 8 },
+                new ProductDto { Id = 10, BrandId = 2, CategoryId = 3, Description = "For his or her sensory pleasure. Fits few known smartphones.", Name = "Rippled Screen Protector", Price = 85.25, StockLevel = 5 }
+            };
+
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+            int[] brands = { 1, 2, 3, 4 };
+            int[] categories = { 1, 2, 3, 4 };
+            string search = "fi";
+            double minPrice = 20;
+            double maxPrice = 85.25;
+
+            // Act
+            var result = await controller.Index(brands, categories, search, minPrice, maxPrice);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var view = result as ViewResult;
+            Assert.IsNotNull(view);
+            var model = view.ViewData.Model as ProductsIndexViewModel;
+            Assert.IsNotNull(model);
+            var products = model.Products;
+            Assert.IsNotNull(products);
+            Assert.AreEqual(fakeProducts.Count(), products.Count());
+            for (int i = 0; i < products.Count(); i++)
+            {
+                Assert.AreEqual(fakeProducts.ElementAt(i).Id, products.ElementAt(i).Id);
+                Assert.AreEqual(fakeProducts.ElementAt(i).BrandId, products.ElementAt(i).BrandId);
+                Assert.AreEqual(fakeProducts.ElementAt(i).CategoryId, products.ElementAt(i).CategoryId);
+                Assert.AreEqual(fakeProducts.ElementAt(i).Description, products.ElementAt(i).Description);
+                Assert.AreEqual(fakeProducts.ElementAt(i).Name, products.ElementAt(i).Name);
+                Assert.AreEqual(fakeProducts.ElementAt(i).Price, products.ElementAt(i).Price);
+                Assert.AreEqual(fakeProducts.ElementAt(i).StockLevel, products.ElementAt(i).StockLevel);
+            }
+        }
+
+        [TestMethod]
+        public async Task GetAllProducts_WithNoResultsSearch_ShouldBeEmpty()
+        {
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+            int[] brands = { 20 };
+            int[] categories = { 20 };
+            string search = "fi";
+            double minPrice = 20;
+            double maxPrice = 85.25;
+
+            // Act
+            var result = await controller.Index(brands, categories, search, minPrice, maxPrice);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var view = result as ViewResult;
+            Assert.IsNotNull(view);
+            var model = view.ViewData.Model as ProductsIndexViewModel;
+            Assert.IsNotNull(model);
+            var products = model.Products;
+            Assert.IsNotNull(products);
+            Assert.AreEqual(0, products.Count());
+        }
+
+        [TestMethod]
+        public async Task GetProduct_WithValidID_ShouldBeValid()
+        {
+            // Arrange
+            ProductDto fakeProduct = new ProductDto { Id = 1, BrandId = 1, CategoryId = 4, Description = "Poor quality fake faux leather cover loose enough to fit any mobile device.", Name = "Wrap It and Hope Cover", Price = 10.25, StockLevel = 1 };
+
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+
+            // Act
+            var result = await controller.Details(1);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var view = result as ViewResult;
+            Assert.IsNotNull(view);
+            var model = view.ViewData.Model as ProductsDetailsViewModel;
+            Assert.IsNotNull(model);
+            var product = model.Product;
+            Assert.IsNotNull(product);
+            Assert.AreEqual(fakeProduct.Id, product.Id);
+            Assert.AreEqual(fakeProduct.BrandId, product.BrandId);
+            Assert.AreEqual(fakeProduct.CategoryId, product.CategoryId);
+            Assert.AreEqual(fakeProduct.Description, product.Description);
+            Assert.AreEqual(fakeProduct.Name, product.Name);
+            Assert.AreEqual(fakeProduct.Price, product.Price);
+            Assert.AreEqual(fakeProduct.StockLevel, product.StockLevel);
+        }
+
+        [TestMethod]
+        public async Task GetProduct_WithInvalidID_ShouldNotFound()
+        {
+            // Arrange
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+
+            // Act
+            var result = await controller.Details(99999);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var objResult = result as NotFoundResult;
+            Assert.IsNotNull(objResult);
         }
     }
 }
