@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
@@ -178,6 +183,138 @@ namespace ThAmCo.Customer.Tests
             Assert.IsNotNull(result);
             var objResult = result as NotFoundResult;
             Assert.IsNotNull(objResult);
+        }
+
+        [TestMethod]
+        public async Task Purchasing_ValidProduct_LoggedIn_ShouldRedirectToAction()
+        {
+            // Arrange
+            IEnumerable<Claim> fakeClaims = new List<Claim>
+            {
+                new Claim("sub", "f32d935b-f175-4450-a93e-e48711c4d481"),
+                new Claim("preferred_username", "email@example.com"),
+                new Claim("name", "Mr Esting")
+            };
+
+            var claimsMock = new Mock<ClaimsPrincipal>();
+            claimsMock.Setup(m => m.Claims).Returns(fakeClaims);
+
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
+
+            var contextMock = new Mock<HttpContext>();
+            contextMock.Setup(ctx => ctx.User).Returns(claimsMock.Object);
+
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = contextMock.Object
+            };
+
+            // Act
+            var result = await controller.Purchase(new PurchaseViewModel
+            {
+                Id = 1
+            });
+
+            // Assert
+            Assert.IsNotNull(result);
+            var objResult = result as RedirectToActionResult;
+            Assert.IsNotNull(objResult);
+            Assert.AreEqual(objResult.ActionName, "Index");
+            Assert.AreEqual(objResult.ControllerName, "Orders");
+        }
+
+        [TestMethod]
+        public async Task Purchasing_InvalidProduct_LoggedIn_ShouldBadRequest()
+        {
+            // Arrange
+            IEnumerable<Claim> fakeClaims = new List<Claim>
+            {
+                new Claim("sub", "f32d935b-f175-4450-a93e-e48711c4d481"),
+                new Claim("preferred_username", "email@example.com"),
+                new Claim("name", "Mr Esting")
+            };
+
+            var claimsMock = new Mock<ClaimsPrincipal>();
+            claimsMock.Setup(m => m.Claims).Returns(fakeClaims);
+
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
+
+            var contextMock = new Mock<HttpContext>();
+            contextMock.Setup(ctx => ctx.User).Returns(claimsMock.Object);
+
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = contextMock.Object
+            };
+
+            // Act
+            var result = await controller.Purchase(new PurchaseViewModel
+            {
+                Id = 99999
+            });
+
+            // Assert
+            Assert.IsNotNull(result);
+            var objResult = result as BadRequestResult;
+            Assert.IsNotNull(objResult);
+        }
+
+        [TestMethod]
+        public async Task Purchasing_ValidProduct_NotLoggedIn_ShouldBadRequest()
+        {
+            // Arrange
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
+
+            // Act
+            var result = await controller.Purchase(new PurchaseViewModel
+            {
+                Id = 1
+            });
+
+            // Assert
+            Assert.IsNotNull(result);
+            var objResult = result as BadRequestResult;
+            Assert.IsNotNull(objResult);
+        }
+
+        [TestMethod]
+        public async Task Purchasing_ValidProduct_LoggedIn_UserCantPurchase_ShouldRedirectToAction()
+        {
+            // Arrange
+            IEnumerable<Claim> fakeClaims = new List<Claim>
+            {
+                new Claim("sub", "not-allowed-to-purchase"),
+                new Claim("preferred_username", "email@example.com"),
+                new Claim("name", "Mr Esting")
+            };
+
+            var claimsMock = new Mock<ClaimsPrincipal>();
+            claimsMock.Setup(m => m.Claims).Returns(fakeClaims);
+
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
+
+            var contextMock = new Mock<HttpContext>();
+            contextMock.Setup(ctx => ctx.User).Returns(claimsMock.Object);
+
+            var tempData = new TempDataDictionary(contextMock.Object, Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = contextMock.Object
+            };
+
+            // Act
+            var result = await controller.Purchase(new PurchaseViewModel
+            {
+                Id = 1
+            });
+
+            // Assert
+            Assert.IsNotNull(result);
+            var objResult = result as RedirectToActionResult;
+            Assert.IsNotNull(objResult);
+            Assert.AreEqual(objResult.ActionName, "Details");
         }
     }
 }

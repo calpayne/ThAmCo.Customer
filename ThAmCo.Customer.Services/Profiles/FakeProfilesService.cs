@@ -21,7 +21,7 @@ namespace ThAmCo.Customer.Services.Profiles
 
         public Task<bool> CanPurchase(string customerId)
         {
-            return Task.FromResult(true);
+            return Task.FromResult(customerId != "not-allowed-to-purchase");
         }
 
         public Task<ProfileDto> GetProfileAsync(string id)
