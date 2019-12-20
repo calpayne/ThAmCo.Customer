@@ -20,6 +20,39 @@ namespace ThAmCo.Customer.Tests
     public class ReviewsTests
     {
         [TestMethod]
+        public async Task CreatingAReview_ValidProduct_LoggedIn_ShouldShowView()
+        {
+            // Arrange
+            IEnumerable<Claim> fakeClaims = new List<Claim>
+            {
+                new Claim("sub", "f32d935b-f175-4450-a93e-e48711c4d481"),
+                new Claim("preferred_username", "email@example.com"),
+                new Claim("name", "Mr Esting")
+            };
+
+            var claimsMock = new Mock<ClaimsPrincipal>();
+            claimsMock.Setup(m => m.Claims).Returns(fakeClaims);
+
+            var controller = new ReviewsController(new FakeProductsService(), new FakeOrdersService(), new FakeReviewsService());
+
+            var contextMock = new Mock<HttpContext>();
+            contextMock.Setup(ctx => ctx.User).Returns(claimsMock.Object);
+
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = contextMock.Object
+            };
+
+            // Act
+            var result = await controller.Create(1);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var view = result as ViewResult;
+            Assert.IsNotNull(view);
+        }
+
+        [TestMethod]
         public async Task CreatingAReview_ValidProduct_LoggedIn_ShouldRedirectToAction()
         {
             // Arrange

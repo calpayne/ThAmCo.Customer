@@ -104,11 +104,12 @@ namespace ThAmCo.Customer.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Update()
         {
-            string suid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
-            if (suid == null)
+            if (User == null)
             {
                 return BadRequest();
             }
+
+            string suid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
 
             var profile = await _profiles.GetProfileAsync(suid);
             return View(UpdateViewModel.Transform(profile));
@@ -121,6 +122,17 @@ namespace ThAmCo.Customer.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (User == null)
+                {
+                    return BadRequest();
+                }
+
+                string suid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+                if (suid != uvm.Id)
+                {
+                    return BadRequest();
+                }
+
                 bool updated = await _profiles.UpdateProfileAsync(UpdateViewModel.ToProfileDto(uvm));
 
                 if (!updated)
