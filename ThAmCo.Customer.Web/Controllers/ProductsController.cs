@@ -96,7 +96,8 @@ namespace ThAmCo.Customer.Web.Controllers
             bool canPurchase = await _profiles.CanPurchase(usid);
             if (!canPurchase)
             {
-                return BadRequest();
+                TempData["error"] = "You cannot purchase products. Please make sure that your account information is complete.";
+                return RedirectToAction("Details", new { @id = purchase.Id });
             }
 
             var success = await _products.PurchaseAsync(new OrderDto
@@ -115,6 +116,7 @@ namespace ThAmCo.Customer.Web.Controllers
                 return RedirectToAction("Index", "Orders");
             }
 
+            TempData["error"] = "Your purchase failed. Please try again.";
             return RedirectToAction("Details", new { @id = purchase.Id });
         }
     }
