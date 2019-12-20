@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,19 +17,76 @@ namespace ThAmCo.Customer.Services.Profiles
             _client = client;
         }
 
-        public Task<bool> CanPurchase(string customerId)
+        public async Task<bool> CanPurchase(string customerId)
         {
-            throw new NotImplementedException();
+            ProfileDto profile;
+
+            try
+            {
+                HttpResponseMessage response = await _client.GetAsync("/api/profiles/canpurchase/" + id);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+                response.EnsureSuccessStatusCode();
+
+                profile = await response.Content.ReadAsAsync<ProfileDto>();
+            }
+            catch (HttpRequestException)
+            {
+                profile = null;
+            }
+
+            return profile != null && profile.Id == customerId;
         }
 
-        public Task<ProfileDto> GetProfileAsync(string id)
+        public async Task<ProfileDto> GetProfileAsync(string id)
         {
-            throw new NotImplementedException();
+            ProfileDto profile;
+
+            try
+            {
+                HttpResponseMessage response = await _client.GetAsync("/api/profiles/" + id);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+                response.EnsureSuccessStatusCode();
+
+                profile = await response.Content.ReadAsAsync<ProfileDto>();
+            }
+            catch (HttpRequestException)
+            {
+                profile = null;
+            }
+
+            return profile;
         }
 
-        public Task<bool> UpdateProfileAsync(ProfileDto profile)
+        public async Task<bool> UpdateProfileAsync(ProfileDto profile)
         {
-            throw new NotImplementedException();
+            try
+            {
+                HttpResponseMessage response = await _client.PostAsJsonAsync("/api/profiles/", profile);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+                response.EnsureSuccessStatusCode();
+
+                ProfileDto data = await response.Content.ReadAsAsync<ProfileDto>();
+
+                if (data == null || data.Id != profile.Id)
+                {
+                    return false;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
