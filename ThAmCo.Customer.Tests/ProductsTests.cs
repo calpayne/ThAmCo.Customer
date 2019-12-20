@@ -315,6 +315,9 @@ namespace ThAmCo.Customer.Tests
             var objResult = result as RedirectToActionResult;
             Assert.IsNotNull(objResult);
             Assert.AreEqual(objResult.ActionName, "Details");
+            Assert.AreEqual(tempData.Count, 1);
+            Assert.IsTrue(tempData.ContainsKey("error"));
+            Assert.IsTrue(tempData.ContainsValue("You cannot purchase products. Please make sure that your account information is complete."));
         }
     }
 }
