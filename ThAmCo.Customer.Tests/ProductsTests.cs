@@ -9,6 +9,7 @@ using ThAmCo.Customer.Models;
 using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Products;
+using ThAmCo.Customer.Services.Profiles;
 using ThAmCo.Customer.Services.Reviews;
 using ThAmCo.Customer.Web.Controllers;
 using ThAmCo.Customer.Web.Models;
@@ -38,7 +39,7 @@ namespace ThAmCo.Customer.Tests
                 new ProductDto { Id = 12, Currency = "£", BrandId = 4, CategoryId = 1, Description = "Guaranteed not to conduct electical charge from your fingers.", Name = "Non-conductive Screen Protector", Price = 99.25, StockLevel = 0 }
             };
 
-            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
             int[] brands = { 1, 2, 3, 4 };
             int[] categories = { 1, 2, 3, 4 };
             string search = ".";
@@ -81,7 +82,7 @@ namespace ThAmCo.Customer.Tests
                 new ProductDto { Id = 10, BrandId = 2, CategoryId = 3, Description = "For his or her sensory pleasure. Fits few known smartphones.", Name = "Rippled Screen Protector", Price = 85.25, StockLevel = 5 }
             };
 
-            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
             int[] brands = { 1, 2, 3, 4 };
             int[] categories = { 1, 2, 3, 4 };
             string search = "fi";
@@ -115,7 +116,7 @@ namespace ThAmCo.Customer.Tests
         [TestMethod]
         public async Task GetAllProducts_WithNoResultsSearch_ShouldBeEmpty()
         {
-            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
             int[] brands = { 20 };
             int[] categories = { 20 };
             string search = "fi";
@@ -142,7 +143,7 @@ namespace ThAmCo.Customer.Tests
             // Arrange
             ProductDto fakeProduct = new ProductDto { Id = 1, BrandId = 1, CategoryId = 4, Description = "Poor quality fake faux leather cover loose enough to fit any mobile device.", Name = "Wrap It and Hope Cover", Price = 10.25, StockLevel = 1 };
 
-            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
 
             // Act
             var result = await controller.Details(1);
@@ -168,7 +169,7 @@ namespace ThAmCo.Customer.Tests
         public async Task GetProduct_WithInvalidID_ShouldNotFound()
         {
             // Arrange
-            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService());
+            var controller = new ProductsController(new FakeProductsService(), new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
 
             // Act
             var result = await controller.Details(99999);
