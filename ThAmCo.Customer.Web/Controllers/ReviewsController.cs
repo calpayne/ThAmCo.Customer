@@ -24,15 +24,8 @@ namespace ThAmCo.Customer.Web.Controllers
             _reviews = reviews;
         }
 
-        private async Task<bool> isValid(int productId)
+        private async Task<bool> checkCanReview(int productId)
         {
-            ProductDto product = await _products.GetByIDAsync(productId);
-
-            if (product == null)
-            {
-                return false;
-            }
-
             string suid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
             if (suid == null)
             {
@@ -53,7 +46,19 @@ namespace ThAmCo.Customer.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Create(int id)
         {
-            bool canReview = await isValid(id);
+            ProductDto product = await _products.GetByIDAsync(id);
+
+            if (product == null)
+            {
+                return BadRequest();
+            }
+
+            if (User == null)
+            {
+                return BadRequest();
+            }
+
+            bool canReview = await checkCanReview(id);
 
             if (!canReview)
             {
@@ -68,13 +73,26 @@ namespace ThAmCo.Customer.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title","Description","Rating","ProductId")] ReviewDto review)
         {
+            ProductDto product = await _products.GetByIDAsync(review.ProductId);
+
+            if (product == null)
+            {
+                return BadRequest();
+            }
+
+            if (User == null)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid)
             {
-                bool canReview = await isValid(review.ProductId);
+                bool canReview = await checkCanReview(review.ProductId);
 
                 if (!canReview)
                 {
-                    return BadRequest();
+                    TempData["error"] = "You cannot review this product.";
+                    return RedirectToAction("Details", "Products", new { @id = review.ProductId });
                 }
 
                 var created = await _reviews.CreateReview(review);
