@@ -23,8 +23,8 @@ namespace ThAmCo.Customer.Tests
             // Arrange
             IEnumerable<OrderGetDto> fakeOrders = new List<OrderGetDto>
             {
-                new OrderGetDto { Id = 1, CreationDate = new DateTime(2019, 12, 7), Price = 10.25, Status = "Dispatched", Product = new ProductDto { Id = 1, Currency = "£", BrandId = 1, CategoryId = 4, Description = "Poor quality fake faux leather cover loose enough to fit any mobile device.", Name = "Wrap It and Hope Cover", Price = 10.25, StockLevel = 1 }, CustomerId = "f32d935b-f175-4450-a93e-e48711c4d481" },
-                new OrderGetDto { Id = 2, CreationDate = new DateTime(2019, 12, 9), Price = 50.25, Status = "Pending", Product = new ProductDto { Id = 2, Currency = "£", BrandId = 2, CategoryId = 3, Description = "Purchase you favourite chocolate and use the provided heating element to melt it into the perfect cover for your mobile device.", Name = "Chocolate Cover", Price = 50.25, StockLevel = 12 }, CustomerId = "f32d935b-f175-4450-a93e-e48711c4d481" }
+                new OrderGetDto { Id = 1, TimePlaced = new DateTime(2019, 12, 7), Price = 10.25, TimeDispatched = new DateTime(2019, 12, 8), Product = new ProductDto { Id = 1, Currency = "£", BrandId = 1, CategoryId = 4, Description = "Poor quality fake faux leather cover loose enough to fit any mobile device.", Name = "Wrap It and Hope Cover", Price = 10.25, StockLevel = 1 }, CustomerId = "f32d935b-f175-4450-a93e-e48711c4d481" },
+                new OrderGetDto { Id = 2, TimePlaced = new DateTime(2019, 12, 9), Price = 50.25, TimeDispatched = null, Product = new ProductDto { Id = 2, Currency = "£", BrandId = 2, CategoryId = 3, Description = "Purchase you favourite chocolate and use the provided heating element to melt it into the perfect cover for your mobile device.", Name = "Chocolate Cover", Price = 50.25, StockLevel = 12 }, CustomerId = "f32d935b-f175-4450-a93e-e48711c4d481" }
             };
 
             IEnumerable<Claim> fakeClaims = new List<Claim>
@@ -63,8 +63,8 @@ namespace ThAmCo.Customer.Tests
             {
                 Assert.AreEqual(fakeOrders.ElementAt(i).Id, orders.ElementAt(i).Id);
                 Assert.AreEqual(fakeOrders.ElementAt(i).Price, orders.ElementAt(i).Price);
-                Assert.AreEqual(fakeOrders.ElementAt(i).CreationDate, orders.ElementAt(i).CreationDate);
-                Assert.AreEqual(fakeOrders.ElementAt(i).Status, orders.ElementAt(i).Status);
+                Assert.AreEqual(fakeOrders.ElementAt(i).TimePlaced, orders.ElementAt(i).TimePlaced);
+                Assert.AreEqual(fakeOrders.ElementAt(i).TimeDispatched, orders.ElementAt(i).TimeDispatched);
                 Assert.AreEqual(fakeOrders.ElementAt(i).CustomerId, orders.ElementAt(i).CustomerId);
             }
         }

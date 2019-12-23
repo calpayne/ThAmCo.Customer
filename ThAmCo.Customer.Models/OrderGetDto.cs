@@ -9,8 +9,13 @@ namespace ThAmCo.Customer.Models
         public int Id { get; set; }
         public ProductDto Product { get; set; }
         public double Price { get; set; }
-        public DateTime CreationDate { get; set; }
-        public string Status { get; set; }
+        public DateTime TimePlaced { get; set; }
+        public DateTime? TimeDispatched { get; set; }
         public string CustomerId { get; set; }
+        public string ViewStatus { get
+            {
+                return TimeDispatched == null ? "Not dispatched" : TimeDispatched.ToString();
+            }
+        }
     }
 }
