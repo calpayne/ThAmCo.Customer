@@ -23,7 +23,7 @@ namespace ThAmCo.Customer.Services.Profiles
 
             try
             {
-                HttpResponseMessage response = await _client.GetAsync("/api/profiles/canpurchase/" + id);
+                HttpResponseMessage response = await _client.GetAsync("/api/profiles/canpurchase/" + customerId);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return false;
