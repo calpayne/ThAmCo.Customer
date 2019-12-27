@@ -105,6 +105,10 @@ namespace ThAmCo.Customer.Web.Controllers
                     return RedirectToAction("Index", "Orders");
                 }
             }
+            else
+            {
+                return BadRequest();
+            }
 
             return View(review);
         }

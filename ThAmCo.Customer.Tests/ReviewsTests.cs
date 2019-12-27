@@ -5,6 +5,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -198,6 +200,70 @@ namespace ThAmCo.Customer.Tests
             Assert.AreEqual(tempData.Count, 1);
             Assert.IsTrue(tempData.ContainsKey("error"));
             Assert.IsTrue(tempData.ContainsValue("You cannot review this product."));
+        }
+
+        [TestMethod]
+        public void CreateAReview_ModelValidate_ShouldBeFalse()
+        {
+            // Arrange
+            var validationResultList = new List<ValidationResult>();
+            ReviewDto review = new ReviewDto
+            {
+                ProductId = 1,
+                Rating = 6,
+                Description = "This is a good review",
+                Title = "I like this product"
+            };
+
+            // Act
+            var result = Validator.TryValidateObject(review, new ValidationContext(review), validationResultList, true);
+
+            // Assert
+            Assert.IsFalse(result);
+            Assert.AreEqual(1, validationResultList.Count);
+            Assert.AreEqual("Rating", validationResultList[0].MemberNames.ElementAt(0));
+            Assert.AreEqual("The field Rating must be between 1 and 5.", validationResultList[0].ErrorMessage);
+        }
+
+        [TestMethod]
+        public async Task CreateAReview_WithInvalidModelState_ShouldBadRequest()
+        {
+            // Arrange
+            IEnumerable<Claim> fakeClaims = new List<Claim>
+            {
+                new Claim("sub", "f32d935b-f175-4450-a93e-e48711c4d481"),
+                new Claim("preferred_username", "email@example.com"),
+                new Claim("name", "Mr Esting")
+            };
+
+            var claimsMock = new Mock<ClaimsPrincipal>();
+            claimsMock.Setup(m => m.Claims).Returns(fakeClaims);
+
+            var controller = new ReviewsController(new FakeProductsService(), new FakeOrdersService(), new FakeReviewsService());
+
+            var contextMock = new Mock<HttpContext>();
+            contextMock.Setup(ctx => ctx.User).Returns(claimsMock.Object);
+
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = contextMock.Object
+            };
+
+            controller.ModelState.AddModelError("test", "test");
+
+            // Act
+            var result = await controller.Create(new ReviewDto
+            {
+                ProductId = 1,
+                Rating = 5,
+                Description = "This is a good review",
+                Title = "I like this product"
+            });
+
+            // Assert
+            Assert.IsNotNull(result);
+            var objResult = result as BadRequestResult;
+            Assert.IsNotNull(objResult);
         }
     }
 }
