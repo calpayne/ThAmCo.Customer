@@ -25,7 +25,7 @@
                         <p class="mb-0"><b>Dispatched:</b> @Html.DisplayFor(modelItem => item.ViewStatus)</p>
                         <p><b>Date:</b> @Html.DisplayFor(modelItem => item.TimePlaced)</p>
                         <a class="btn btn-primary" asp-controller="Products" asp-action="Details" asp-route-id="@item.Product.Id">View the product</a>
-                        <a class="btn btn-outline-dark" href="#">Write a review</a>
+                        <a class="btn btn-outline-dark" asp-controller="Reviews" asp-action="Create" asp-route-id="@item.Product.Id">Write a review</a>
                     </div>
                 </div>
             </div>

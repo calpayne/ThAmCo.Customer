@@ -65,7 +65,10 @@ namespace ThAmCo.Customer.Web.Controllers
                 return BadRequest();
             }
 
-            return View();
+            return View(new ReviewDto 
+            { 
+                ProductId = id
+            });
         }
 
         [HttpPost]
