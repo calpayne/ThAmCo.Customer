@@ -62,7 +62,8 @@ namespace ThAmCo.Customer.Tests
             Assert.IsNotNull(result);
             var objResult = result as RedirectToActionResult;
             Assert.IsNotNull(objResult);
-            Assert.AreEqual(objResult.ActionName, "Update");
+            Assert.AreEqual(objResult.ActionName, "Index");
+            Assert.AreEqual(objResult.ControllerName, "Products");
         }
 
         [TestMethod]

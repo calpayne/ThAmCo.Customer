@@ -140,7 +140,7 @@ namespace ThAmCo.Customer.Web.Controllers
                     return View(uvm);
                 }
 
-                return RedirectToAction(nameof(Update));
+                return RedirectToAction("Index", "Products");
             }
 
             return View(uvm);
