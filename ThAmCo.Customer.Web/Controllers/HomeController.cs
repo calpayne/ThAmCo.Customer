@@ -15,7 +15,7 @@ namespace ThAmCo.Customer.Web.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Products");
         }
 
         [HttpGet]
