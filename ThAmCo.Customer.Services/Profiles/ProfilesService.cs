@@ -63,6 +63,32 @@ namespace ThAmCo.Customer.Services.Profiles
             return profile;
         }
 
+        public async Task<bool> RequestDeletion(string customerId)
+        {
+            try
+            {
+                HttpResponseMessage response = await _client.GetAsync("/api//profile/delreq/" + customerId);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+                response.EnsureSuccessStatusCode();
+
+                ProfileDto data = await response.Content.ReadAsAsync<ProfileDto>();
+
+                if (data == null || data.Id != customerId)
+                {
+                    return false;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task<bool> UpdateProfileAsync(ProfileDto profile)
         {
             try

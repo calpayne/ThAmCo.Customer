@@ -145,5 +145,21 @@ namespace ThAmCo.Customer.Web.Controllers
 
             return View(uvm);
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> RequestDeletion()
+        {
+            if (User == null)
+            {
+                return BadRequest();
+            }
+
+            string suid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+
+            bool has = await _profiles.RequestDeletion(suid);
+
+            return RedirectToAction("Logout");
+        }
     }
 }

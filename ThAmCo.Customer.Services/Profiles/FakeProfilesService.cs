@@ -29,6 +29,11 @@ namespace ThAmCo.Customer.Services.Profiles
             return Task.FromResult(_profiles.FirstOrDefault(p => p.Id == id));
         }
 
+        public Task<bool> RequestDeletion(string customerId)
+        {
+            return Task.FromResult(true);
+        }
+
         public Task<bool> UpdateProfileAsync(ProfileDto profile)
         {
             var data = _profiles.FirstOrDefault(p => p.Id == profile.Id);
