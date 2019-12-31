@@ -114,7 +114,8 @@ namespace ThAmCo.Customer.Services.Products
 
             try
             {
-                HttpResponseMessage response = await _client.PostAsJsonAsync("/api/products/purchase", order);
+                HttpResponseMessage response = await _client.PostAsJsonAsync("/api/products/purchase/", order);
+
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return false;

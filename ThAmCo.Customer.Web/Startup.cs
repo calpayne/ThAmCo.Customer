@@ -53,6 +53,7 @@ namespace ThAmCo.Customer.Web
                 services.AddHttpClient<IProductsService, ProductsService>(c =>
                         {
                             c.BaseAddress = new System.Uri(Configuration["ProductsAPI"]);
+                            c.DefaultRequestHeaders.Accept.ParseAdd("application/json");
                         })
                         .AddTransientHttpErrorPolicy(p =>
                             p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
@@ -70,6 +71,7 @@ namespace ThAmCo.Customer.Web
                 services.AddHttpClient<IBrandsService, BrandsService>(c =>
                         {
                             c.BaseAddress = new System.Uri(Configuration["ProductsAPI"]);
+                            c.DefaultRequestHeaders.Accept.ParseAdd("application/json");
                         })
                         .AddTransientHttpErrorPolicy(p =>
                             p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
@@ -78,6 +80,7 @@ namespace ThAmCo.Customer.Web
                 services.AddHttpClient<ICategoriesService, CategoriesService>(c =>
                         {
                             c.BaseAddress = new System.Uri(Configuration["ProductsAPI"]);
+                            c.DefaultRequestHeaders.Accept.ParseAdd("application/json");
                         })
                         .AddTransientHttpErrorPolicy(p =>
                             p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
@@ -94,6 +97,7 @@ namespace ThAmCo.Customer.Web
                 services.AddHttpClient<IReviewsService, ReviewsService>(c =>
                         {
                             c.BaseAddress = new System.Uri(Configuration["ReviewsAPI"]);
+                            c.DefaultRequestHeaders.Accept.ParseAdd("application/json");
                         })
                         .AddTransientHttpErrorPolicy(p =>
                             p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
@@ -110,6 +114,7 @@ namespace ThAmCo.Customer.Web
                 services.AddHttpClient<IOrdersService, OrdersService>(c =>
                         {
                             c.BaseAddress = new System.Uri(Configuration["OrdersAPI"]);
+                            c.DefaultRequestHeaders.Accept.ParseAdd("application/json");
                         })
                         .AddTransientHttpErrorPolicy(p =>
                             p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
@@ -126,6 +131,7 @@ namespace ThAmCo.Customer.Web
                 services.AddHttpClient<IProfilesService, ProfilesService>(c =>
                         {
                             c.BaseAddress = new System.Uri(Configuration["ProfilesAPI"]);
+                            c.DefaultRequestHeaders.Accept.ParseAdd("application/json");
                         })
                         .AddTransientHttpErrorPolicy(p =>
                             p.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
