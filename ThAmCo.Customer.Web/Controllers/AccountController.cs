@@ -89,12 +89,19 @@ namespace ThAmCo.Customer.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public IActionResult Register([Bind("Username,EmailAddress,Password")] RegisterViewModel rvm)
+        public async Task<IActionResult> Register([Bind("Username,EmailAddress,Password")] RegisterViewModel rvm)
         {
             if (ModelState.IsValid)
             {
-                //do stuff
-                return RedirectToAction(nameof(Register));
+                bool has = await _auth.Register(rvm);
+
+                if (!has)
+                {
+                    ModelState.AddModelError("Error", "Could not register. Please try again.");
+                    return View(rvm);
+                }
+
+                return RedirectToAction(nameof(Login));
             }
 
             return View(rvm);

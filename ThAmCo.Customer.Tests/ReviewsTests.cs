@@ -226,7 +226,7 @@ namespace ThAmCo.Customer.Tests
         }
 
         [TestMethod]
-        public async Task CreateAReview_WithInvalidModelState_ShouldBadRequest()
+        public async Task CreateAReview_WithInvalidModelState_ShouldReturnView()
         {
             // Arrange
             IEnumerable<Claim> fakeClaims = new List<Claim>
@@ -262,7 +262,7 @@ namespace ThAmCo.Customer.Tests
 
             // Assert
             Assert.IsNotNull(result);
-            var objResult = result as BadRequestResult;
+            var objResult = result as ViewResult;
             Assert.IsNotNull(objResult);
         }
     }

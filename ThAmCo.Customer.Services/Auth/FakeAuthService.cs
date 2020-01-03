@@ -33,5 +33,10 @@ namespace ThAmCo.Customer.Services.Auth
                 tokensToStore = tokensToStore
             });
         }
+
+        public Task<bool> Register(RegisterViewModel rvm)
+        {
+            return Task.FromResult(true);
+        }
     }
 }

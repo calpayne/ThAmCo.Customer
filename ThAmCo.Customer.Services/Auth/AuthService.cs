@@ -8,6 +8,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using ThAmCo.Customer.Models;
 using System.Security.Claims;
+using System.Net;
 
 namespace ThAmCo.Customer.Services.Auth
 {
@@ -63,6 +64,32 @@ namespace ThAmCo.Customer.Services.Auth
                 claimsPrincipal = claimsPrincipal,
                 tokensToStore = tokensToStore
             };
+        }
+
+        public async Task<bool> Register(RegisterViewModel rvm)
+        {
+            try
+            {
+                HttpResponseMessage response = await _client.PostAsJsonAsync("/api/accounts/", rvm);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+                response.EnsureSuccessStatusCode();
+
+                var data = await response.Content.ReadAsAsync<RegisterViewModel>();
+
+                if (data == null || data.EmailAddress != rvm.EmailAddress)
+                {
+                    return false;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
