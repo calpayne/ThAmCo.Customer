@@ -166,6 +166,44 @@ namespace ThAmCo.Customer.Tests
         }
 
         [TestMethod]
+        public async Task GetAllProducts_Moq_NoProducts_ShouldBeValid()
+        {
+            // Arrange
+            IEnumerable<ProductDto> fakeProducts = Array.Empty<ProductDto>();
+
+            var expectedJson = JsonConvert.SerializeObject(fakeProducts);
+            var expectedUri = new Uri("https://localhost:44353/");
+            var expectedResponse = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Content = new StringContent(expectedJson, Encoding.UTF8, "application/json")
+            };
+
+            var mock = CreateHttpMock(expectedResponse);
+            var service = CreateMoqProducts(mock);
+
+            var controller = new ProductsController(service, new FakeBrandsService(), new FakeCategoriesService(), new FakeReviewsService(), new FakeProfilesService());
+            int[] brands = { 1, 2, 3, 4 };
+            int[] categories = { 1, 2, 3, 4 };
+            string search = ".";
+            double minPrice = -1;
+            double maxPrice = double.MaxValue;
+
+            // Act
+            var result = await controller.Index(brands, categories, search, minPrice, maxPrice);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var view = result as ViewResult;
+            Assert.IsNotNull(view);
+            var model = view.ViewData.Model as ProductsIndexViewModel;
+            Assert.IsNotNull(model);
+            var products = model.Products;
+            Assert.IsNotNull(products);
+            Assert.AreEqual(fakeProducts.Count(), products.Count());
+        }
+
+        [TestMethod]
         public async Task GetAllProducts_WithValidSearch_ShouldBeValid()
         {
             // Arrange
