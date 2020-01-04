@@ -30,7 +30,7 @@ namespace ThAmCo.Customer.Services.Reviews
 
                 ReviewDto data = await response.Content.ReadAsAsync<ReviewDto>();
 
-                if (data == null || data.Id != review.Id)
+                if (data == null || data.ProductId != review.ProductId)
                 {
                     return false;
                 }

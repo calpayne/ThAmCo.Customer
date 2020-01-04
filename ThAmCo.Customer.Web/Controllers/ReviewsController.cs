@@ -74,7 +74,7 @@ namespace ThAmCo.Customer.Web.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title","Description","Rating","ProductId")] ReviewDto review)
+        public async Task<IActionResult> Create([Bind("Title","Description","Rating","ProductId")] ReviewDto review)
         {
             ProductDto product = await _products.GetByIDAsync(review.ProductId);
 
