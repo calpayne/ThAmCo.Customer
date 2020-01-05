@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Polly.CircuitBreaker;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
@@ -32,6 +34,14 @@ namespace ThAmCo.Customer.Services.Profiles
 
                 profile = await response.Content.ReadAsAsync<ProfileDto>();
             }
+            catch (SocketException)
+            {
+                profile = null;
+            }
+            catch (BrokenCircuitException)
+            {
+                profile = null;
+            }
             catch (HttpRequestException)
             {
                 profile = null;
@@ -54,6 +64,14 @@ namespace ThAmCo.Customer.Services.Profiles
                 response.EnsureSuccessStatusCode();
 
                 profile = await response.Content.ReadAsAsync<ProfileDto>();
+            }
+            catch (SocketException)
+            {
+                profile = null;
+            }
+            catch (BrokenCircuitException)
+            {
+                profile = null;
             }
             catch (HttpRequestException)
             {
@@ -81,6 +99,14 @@ namespace ThAmCo.Customer.Services.Profiles
                     return false;
                 }
             }
+            catch (SocketException)
+            {
+                return false;
+            }
+            catch (BrokenCircuitException)
+            {
+                return false;
+            }
             catch (HttpRequestException)
             {
                 return false;
@@ -106,6 +132,14 @@ namespace ThAmCo.Customer.Services.Profiles
                 {
                     return false;
                 }
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+            catch (BrokenCircuitException)
+            {
+                return false;
             }
             catch (HttpRequestException)
             {

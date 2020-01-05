@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Polly.CircuitBreaker;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
@@ -32,6 +34,14 @@ namespace ThAmCo.Customer.Services.Orders
 
                 has = await response.Content.ReadAsAsync<bool>();
             }
+            catch (SocketException)
+            {
+                has = false;
+            }
+            catch (BrokenCircuitException)
+            {
+                has = false;
+            }
             catch (HttpRequestException)
             {
                 has = false;
@@ -54,6 +64,14 @@ namespace ThAmCo.Customer.Services.Orders
                 response.EnsureSuccessStatusCode();
 
                 orders = await response.Content.ReadAsAsync<IEnumerable<OrderGetDto>>();
+            }
+            catch (SocketException)
+            {
+                orders = Array.Empty<OrderGetDto>();
+            }
+            catch (BrokenCircuitException)
+            {
+                orders = Array.Empty<OrderGetDto>();
             }
             catch (HttpRequestException)
             {

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Polly.CircuitBreaker;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
@@ -31,6 +33,14 @@ namespace ThAmCo.Customer.Services.Products
                 response.EnsureSuccessStatusCode();
 
                 products = await response.Content.ReadAsAsync<IEnumerable<ProductDto>>();
+            }
+            catch (SocketException)
+            {
+                products = Array.Empty<ProductDto>();
+            }
+            catch (BrokenCircuitException)
+            {
+                products = Array.Empty<ProductDto>();
             }
             catch (HttpRequestException)
             {
@@ -76,6 +86,14 @@ namespace ThAmCo.Customer.Services.Products
 
                 products = await response.Content.ReadAsAsync<IEnumerable<ProductDto>>();
             }
+            catch (SocketException)
+            {
+                products = Array.Empty<ProductDto>();
+            }
+            catch (BrokenCircuitException)
+            {
+                products = Array.Empty<ProductDto>();
+            }
             catch (HttpRequestException)
             {
                 products = Array.Empty<ProductDto>();
@@ -91,6 +109,7 @@ namespace ThAmCo.Customer.Services.Products
             try
             {
                 HttpResponseMessage response = await _client.GetAsync("/api/products/" + id);
+
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return null;
@@ -98,6 +117,14 @@ namespace ThAmCo.Customer.Services.Products
                 response.EnsureSuccessStatusCode();
 
                 product = await response.Content.ReadAsAsync<ProductDto>();
+            }
+            catch (SocketException)
+            {
+                product = null;
+            }
+            catch (BrokenCircuitException)
+            {
+                product = null;
             }
             catch (HttpRequestException)
             {
@@ -125,6 +152,14 @@ namespace ThAmCo.Customer.Services.Products
                 result = await response.Content.ReadAsAsync<OrderDto>();
 
                 has = result.Customer.Id == order.Customer.Id && result.Product.Id == order.Product.Id;
+            }
+            catch (SocketException)
+            {
+                result = null;
+            }
+            catch (BrokenCircuitException)
+            {
+                result = null;
             }
             catch (HttpRequestException)
             {

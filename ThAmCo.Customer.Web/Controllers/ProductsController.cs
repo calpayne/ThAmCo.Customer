@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThAmCo.Customer.Models;
 using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
-using ThAmCo.Customer.Services.Orders;
 using ThAmCo.Customer.Services.Products;
 using ThAmCo.Customer.Services.Profiles;
 using ThAmCo.Customer.Services.Reviews;

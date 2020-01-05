@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using ThAmCo.Customer.Models;
 using System.Security.Claims;
 using System.Net;
+using System.Net.Sockets;
+using Polly.CircuitBreaker;
 
 namespace ThAmCo.Customer.Services.Auth
 {
@@ -83,6 +85,14 @@ namespace ThAmCo.Customer.Services.Auth
                 {
                     return false;
                 }
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+            catch (BrokenCircuitException)
+            {
+                return false;
             }
             catch (HttpRequestException)
             {

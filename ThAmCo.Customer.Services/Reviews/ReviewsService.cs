@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Polly.CircuitBreaker;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
@@ -35,6 +37,14 @@ namespace ThAmCo.Customer.Services.Reviews
                     return false;
                 }
             }
+            catch (SocketException)
+            {
+                return false;
+            }
+            catch (BrokenCircuitException)
+            {
+                return false;
+            }
             catch (HttpRequestException)
             {
                 return false;
@@ -57,6 +67,14 @@ namespace ThAmCo.Customer.Services.Reviews
                 response.EnsureSuccessStatusCode();
 
                 review = await response.Content.ReadAsAsync< IEnumerable<ReviewDto>>();
+            }
+            catch (SocketException)
+            {
+                review = Array.Empty<ReviewDto>();
+            }
+            catch (BrokenCircuitException)
+            {
+                review = Array.Empty<ReviewDto>();
             }
             catch (HttpRequestException)
             {
