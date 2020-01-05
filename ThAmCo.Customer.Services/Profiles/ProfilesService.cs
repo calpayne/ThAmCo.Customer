@@ -67,7 +67,7 @@ namespace ThAmCo.Customer.Services.Profiles
         {
             try
             {
-                HttpResponseMessage response = await _client.GetAsync("/api//profile/delreq/" + customerId);
+                HttpResponseMessage response = await _client.GetAsync("/api/profile/delreq/" + customerId);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return false;
