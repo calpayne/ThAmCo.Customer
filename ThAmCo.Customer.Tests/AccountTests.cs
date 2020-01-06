@@ -318,7 +318,7 @@ namespace ThAmCo.Customer.Tests
         }
 
         [TestMethod]
-        public async Task Register_NotLoggedIn_InvalidData_ShouldBeFalse()
+        public void Register_NotLoggedIn_InvalidData_ShouldBeFalse()
         {
             // Arrange
             var validationResultList = new List<ValidationResult>();

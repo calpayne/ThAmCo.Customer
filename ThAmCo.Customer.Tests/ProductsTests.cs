@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
+using ThAmCo.Customer.Services.Auth;
 using ThAmCo.Customer.Services.Brands;
 using ThAmCo.Customer.Services.Categories;
 using ThAmCo.Customer.Services.Products;
@@ -46,7 +47,7 @@ namespace ThAmCo.Customer.Tests
         {
             var client = new HttpClient(mock.Object);
             client.BaseAddress = new System.Uri("https://localhost:44353/");
-            var service = new ProductsService(client);
+            var service = new ProductsService(client, new FakeAuthService());
             return service;
         }
 
