@@ -3,14 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Moq.Protected;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
+using ThAmCo.Customer.Services.Auth;
 using ThAmCo.Customer.Services.Orders;
 using ThAmCo.Customer.Services.Products;
 using ThAmCo.Customer.Services.Reviews;
@@ -21,6 +26,148 @@ namespace ThAmCo.Customer.Tests
     [TestClass]
     public class ReviewsTests
     {
+        private Mock<HttpMessageHandler> CreateHttpMock(HttpResponseMessage expected)
+        {
+            var mock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            mock.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(expected)
+                .Verifiable();
+
+            return mock;
+        }
+
+        private ReviewsService CreateMoqReviews(Mock<HttpMessageHandler> mock)
+        {
+            var client = new HttpClient(mock.Object);
+            client.BaseAddress = new System.Uri("https://localhost:44353/");
+            var service = new ReviewsService(client, new FakeAuthService());
+            return service;
+        }
+
+        [TestMethod]
+        public async Task GettingReviews_ValidProduct_ShouldReturnReviews()
+        {
+            // Arrange
+            IEnumerable<ReviewDto> fakeReviews = new List<ReviewDto>
+            {
+                new ReviewDto { Id = 1, ProductId = 1, Title = "Amazing!", Description = "I really think that this product is outstanding!", Rating = 5 },
+                new ReviewDto { Id = 2, ProductId = 1, Title = "Good!", Description = "I really think that this product is good!", Rating = 4 },
+                new ReviewDto { Id = 3, ProductId = 1, Title = "Ok!", Description = "I really think that this product is ok!", Rating = 3 },
+                new ReviewDto { Id = 4, ProductId = 1, Title = "Meh!", Description = "I really think that this product is meh!", Rating = 2 },
+                new ReviewDto { Id = 5, ProductId = 1, Title = "Bad!", Description = "I really think that this product is bad!", Rating = 1 }
+            };
+
+            var service = new FakeReviewsService();
+            var productId = 1;
+
+            // Act
+            var result = await service.GetAllAsync(productId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var reviews = result as IEnumerable<ReviewDto>;
+            Assert.IsNotNull(reviews);
+            Assert.AreEqual(fakeReviews.Count(), reviews.Count());
+            for (int i = 0; i < reviews.Count(); i++)
+            {
+                Assert.AreEqual(fakeReviews.ElementAt(i).Id, reviews.ElementAt(i).Id);
+                Assert.AreEqual(fakeReviews.ElementAt(i).Description, reviews.ElementAt(i).Description);
+                Assert.AreEqual(fakeReviews.ElementAt(i).Title, reviews.ElementAt(i).Title);
+                Assert.AreEqual(fakeReviews.ElementAt(i).Rating, reviews.ElementAt(i).Rating);
+                Assert.AreEqual(fakeReviews.ElementAt(i).ProductId, reviews.ElementAt(i).ProductId);
+            }
+        }
+
+        [TestMethod]
+        public async Task GettingReviews_ValidProduct_Moq_ShouldReturnReviews()
+        {
+            // Arrange
+            IEnumerable<ReviewDto> fakeReviews = new List<ReviewDto>
+            {
+                new ReviewDto { Id = 1, ProductId = 1, Title = "Amazing!", Description = "I really think that this product is outstanding!", Rating = 5 },
+                new ReviewDto { Id = 2, ProductId = 1, Title = "Good!", Description = "I really think that this product is good!", Rating = 4 },
+                new ReviewDto { Id = 3, ProductId = 1, Title = "Ok!", Description = "I really think that this product is ok!", Rating = 3 },
+                new ReviewDto { Id = 4, ProductId = 1, Title = "Meh!", Description = "I really think that this product is meh!", Rating = 2 },
+                new ReviewDto { Id = 5, ProductId = 1, Title = "Bad!", Description = "I really think that this product is bad!", Rating = 1 }
+            };
+
+            var expectedJson = JsonConvert.SerializeObject(fakeReviews);
+            var expectedUri = new Uri("https://localhost:44353/");
+            var expectedResponse = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Content = new StringContent(expectedJson, Encoding.UTF8, "application/json")
+            };
+
+            var mock = CreateHttpMock(expectedResponse);
+            var service = CreateMoqReviews(mock);
+            var productId = 1;
+
+            // Act
+            var result = await service.GetAllAsync(productId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var reviews = result as IEnumerable<ReviewDto>;
+            Assert.IsNotNull(reviews);
+            Assert.AreEqual(fakeReviews.Count(), reviews.Count());
+            for (int i = 0; i < reviews.Count(); i++)
+            {
+                Assert.AreEqual(fakeReviews.ElementAt(i).Id, reviews.ElementAt(i).Id);
+                Assert.AreEqual(fakeReviews.ElementAt(i).Description, reviews.ElementAt(i).Description);
+                Assert.AreEqual(fakeReviews.ElementAt(i).Title, reviews.ElementAt(i).Title);
+                Assert.AreEqual(fakeReviews.ElementAt(i).Rating, reviews.ElementAt(i).Rating);
+                Assert.AreEqual(fakeReviews.ElementAt(i).ProductId, reviews.ElementAt(i).ProductId);
+            }
+        }
+
+        [TestMethod]
+        public async Task GettingReviews_InvalidProduct_ShouldReturnEmpty()
+        {
+            // Arrange
+            var service = new FakeReviewsService();
+            var productId = 9999;
+
+            // Act
+            var result = await service.GetAllAsync(productId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var reviews = result as IEnumerable<ReviewDto>;
+            Assert.IsNotNull(reviews);
+            Assert.AreEqual(0, reviews.Count());
+        }
+
+        [TestMethod]
+        public async Task GettingReviews_InvalidProduct_Moq_ShouldReturnEmpty()
+        {
+            // Arrange
+            var expectedJson = JsonConvert.SerializeObject(Array.Empty<ReviewDto>());
+            var expectedUri = new Uri("https://localhost:44353/");
+            var expectedResponse = new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Content = new StringContent(expectedJson, Encoding.UTF8, "application/json")
+            };
+
+            var mock = CreateHttpMock(expectedResponse);
+            var service = CreateMoqReviews(mock);
+            var productId = 9999;
+
+            // Act
+            var result = await service.GetAllAsync(productId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            var reviews = result as IEnumerable<ReviewDto>;
+            Assert.IsNotNull(reviews);
+            Assert.AreEqual(0, reviews.Count());
+        }
+
         [TestMethod]
         public async Task CreatingAReview_ValidProduct_LoggedIn_ShouldShowView()
         {
