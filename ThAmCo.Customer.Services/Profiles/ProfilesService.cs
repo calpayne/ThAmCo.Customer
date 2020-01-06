@@ -1,4 +1,5 @@
-﻿using Polly.CircuitBreaker;
+﻿using IdentityModel.Client;
+using Polly.CircuitBreaker;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,16 +8,19 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
+using ThAmCo.Customer.Services.Auth;
 
 namespace ThAmCo.Customer.Services.Profiles
 {
     public class ProfilesService : IProfilesService
     {
         private readonly HttpClient _client;
+        private readonly IAuthService _auth;
 
-        public ProfilesService(HttpClient client)
+        public ProfilesService(HttpClient client, IAuthService auth)
         {
             _client = client;
+            _auth = auth;
         }
 
         public async Task<bool> CanPurchase(string customerId)
@@ -25,7 +29,8 @@ namespace ThAmCo.Customer.Services.Profiles
 
             try
             {
-                HttpResponseMessage response = await _client.GetAsync("/api/profiles/canpurchase/" + customerId);
+                _client.SetBearerToken(await _auth.GetProfilesToken());
+                HttpResponseMessage response = await _client.GetAsync("/api/customers/canpurchase/" + customerId);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return false;
@@ -56,7 +61,8 @@ namespace ThAmCo.Customer.Services.Profiles
 
             try
             {
-                HttpResponseMessage response = await _client.GetAsync("/api/profiles/" + id);
+                _client.SetBearerToken(await _auth.GetProfilesToken());
+                HttpResponseMessage response = await _client.GetAsync("/api/customers/" + id);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return null;
@@ -85,7 +91,8 @@ namespace ThAmCo.Customer.Services.Profiles
         {
             try
             {
-                HttpResponseMessage response = await _client.GetAsync("/api/profile/delreq/" + customerId);
+                _client.SetBearerToken(await _auth.GetProfilesToken());
+                HttpResponseMessage response = await _client.GetAsync("/api/customers/delreq/" + customerId);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return false;
@@ -119,7 +126,8 @@ namespace ThAmCo.Customer.Services.Profiles
         {
             try
             {
-                HttpResponseMessage response = await _client.PostAsJsonAsync("/api/profiles/", profile);
+                _client.SetBearerToken(await _auth.GetProfilesToken());
+                HttpResponseMessage response = await _client.PostAsJsonAsync("/api/customers/", profile);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return false;

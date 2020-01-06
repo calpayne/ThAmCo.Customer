@@ -10,6 +10,26 @@ namespace ThAmCo.Customer.Services.Auth
 {
     public class FakeAuthService : IAuthService
     {
+        public Task<string> GetOrdersToken()
+        {
+            return Task.FromResult("");
+        }
+
+        public Task<string> GetProductsToken()
+        {
+            return Task.FromResult("");
+        }
+
+        public Task<string> GetProfilesToken()
+        {
+            return Task.FromResult("");
+        }
+
+        public Task<string> GetReviewsToken()
+        {
+            return Task.FromResult("");
+        }
+
         public Task<AuthDto> Login(LoginViewModel lvm)
         {
             IEnumerable<Claim> fakeClaims = new List<Claim>

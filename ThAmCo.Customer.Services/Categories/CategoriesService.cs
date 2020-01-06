@@ -1,4 +1,5 @@
-﻿using Polly.CircuitBreaker;
+﻿using IdentityModel.Client;
+using Polly.CircuitBreaker;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,16 +8,19 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
+using ThAmCo.Customer.Services.Auth;
 
 namespace ThAmCo.Customer.Services.Categories
 {
     public class CategoriesService : ICategoriesService
     {
         private readonly HttpClient _client;
+        private readonly IAuthService _auth;
 
-        public CategoriesService(HttpClient client)
+        public CategoriesService(HttpClient client, IAuthService auth)
         {
             _client = client;
+            _auth = auth;
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
@@ -25,6 +29,7 @@ namespace ThAmCo.Customer.Services.Categories
 
             try
             {
+                _client.SetBearerToken(await _auth.GetProductsToken());
                 HttpResponseMessage response = await _client.GetAsync("/api/categories");
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
@@ -56,6 +61,7 @@ namespace ThAmCo.Customer.Services.Categories
 
             try
             {
+                _client.SetBearerToken(await _auth.GetProductsToken());
                 HttpResponseMessage response = await _client.GetAsync("/api/categories/" + id);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {

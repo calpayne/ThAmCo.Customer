@@ -119,6 +119,12 @@ namespace ThAmCo.Customer.Web.Controllers
             string suid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
 
             var profile = await _profiles.GetProfileAsync(suid);
+
+            if (profile == null)
+            {
+                return BadRequest();
+            }
+
             return View(UpdateViewModel.Transform(profile));
         }
 

@@ -1,4 +1,5 @@
-﻿using Polly.CircuitBreaker;
+﻿using IdentityModel.Client;
+using Polly.CircuitBreaker;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,22 +8,26 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using ThAmCo.Customer.Models;
+using ThAmCo.Customer.Services.Auth;
 
 namespace ThAmCo.Customer.Services.Reviews
 {
     public class ReviewsService : IReviewsService
     {
         private readonly HttpClient _client;
+        private readonly IAuthService _auth;
 
-        public ReviewsService(HttpClient client)
+        public ReviewsService(HttpClient client, IAuthService auth)
         {
             _client = client;
+            _auth = auth;
         }
 
         public async Task<bool> CreateReview(ReviewDto review)
         {
             try
             {
+                _client.SetBearerToken(await _auth.GetReviewsToken());
                 HttpResponseMessage response = await _client.PostAsJsonAsync("/api/reviews/", review);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
@@ -59,6 +64,7 @@ namespace ThAmCo.Customer.Services.Reviews
 
             try
             {
+                _client.SetBearerToken(await _auth.GetReviewsToken());
                 HttpResponseMessage response = await _client.GetAsync("/api/reviews/" + id);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {

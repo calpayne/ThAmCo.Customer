@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Net;
 using System.Net.Sockets;
 using Polly.CircuitBreaker;
+using Microsoft.AspNetCore.Http;
 
 namespace ThAmCo.Customer.Services.Auth
 {
@@ -100,6 +101,41 @@ namespace ThAmCo.Customer.Services.Auth
             }
 
             return true;
+        }
+
+        private async Task<string> GetAccessTokenFor(string scope)
+        {
+            var disco = await _client.GetDiscoveryDocumentAsync(_config["AuthServer"]);
+            var tokenResponse = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            {
+                Address = disco.TokenEndpoint,
+                ClientId = _config["ClientId"],
+                ClientSecret = _config["ClientSecret"],
+
+                Scope = scope
+            });
+
+            return tokenResponse.AccessToken;
+        }
+
+        public async Task<string> GetProductsToken()
+        {
+            return await GetAccessTokenFor(_config["ProductsClientId"]);
+        }
+
+        public async Task<string> GetProfilesToken()
+        {
+            return await GetAccessTokenFor(_config["ProfilesClientId"]);
+        }
+
+        public async Task<string> GetOrdersToken()
+        {
+            return await GetAccessTokenFor(_config["OrdersClientId"]);
+        }
+
+        public async Task<string> GetReviewsToken()
+        {
+            return await GetAccessTokenFor(_config["ReviewsClientId"]);
         }
     }
 }

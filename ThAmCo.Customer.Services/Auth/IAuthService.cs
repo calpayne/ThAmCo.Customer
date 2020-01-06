@@ -10,5 +10,9 @@ namespace ThAmCo.Customer.Services.Auth
     {
         Task<AuthDto> Login(LoginViewModel lvm);
         Task<bool> Register(RegisterViewModel rvm);
+        Task<string> GetProductsToken();
+        Task<string> GetProfilesToken();
+        Task<string> GetOrdersToken();
+        Task<string> GetReviewsToken();
     }
 }
